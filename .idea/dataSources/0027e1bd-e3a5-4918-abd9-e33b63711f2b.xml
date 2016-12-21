@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="MySQL - project16@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="2.6">
+    <schema id="1" name="project16">
+      <visible>1</visible>
+    </schema>
+    <schema id="2" name="information_schema"/>
+    <schema id="3" name="mysql"/>
+    <schema id="4" name="performance_schema"/>
+    <table id="5" parent="1" name="log"/>
+    <table id="6" parent="1" name="settings"/>
+    <column id="7" parent="5" name="userID">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="8" parent="5" name="levelOfDanger">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="9" parent="5" name="lightValue">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="10" parent="5" name="proxValue">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="11" parent="5" name="date">
+      <data-type>date|0</data-type>
+    </column>
+    <column id="12" parent="5" name="time">
+      <data-type>time|0</data-type>
+    </column>
+    <column id="13" parent="6" name="connUrl">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="14" parent="6" name="clientName">
+      <data-type>text|0</data-type>
+    </column>
+    <column id="15" parent="6" name="cleanSession">
+      <data-type>tinyint(1)|0</data-type>
+    </column>
+    <column id="16" parent="6" name="lightThreshold">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="17" parent="6" name="proxThreshold">
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="18" parent="6" name="id">
+      <data-type>int(11)|0</data-type>
+    </column>
+  </database-model>
+</dataSource>

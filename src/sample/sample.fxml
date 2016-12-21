@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Quit" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="How to use" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </children></VBox>
+   </top>
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Search">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="251.0" layoutY="14.0" text="Search by field" />
+                        <TextField layoutX="14.0" layoutY="60.0" />
+                        <Label layoutX="14.0" layoutY="44.0" text="User ID" />
+                        <Label layoutX="345.0" layoutY="44.0" text="Level of Danger" />
+                        <Label layoutX="14.0" layoutY="111.0" text="Light Value" />
+                        <Label layoutX="346.0" layoutY="111.0" text="Proximity Value" />
+                        <Label layoutX="14.0" layoutY="180.0" text="Date" />
+                        <Label layoutX="346.0" layoutY="180.0" text="Time" />
+                        <Accordion layoutX="345.0" layoutY="47.0" />
+                        <ComboBox id="lvl_of_danger_combo" layoutX="345.0" layoutY="60.0" prefWidth="150.0" promptText="-Choose one-">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="-Choose one-" />
+                                    <String fx:value="Danger Low" />
+                                    <String fx:value="Danger High" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <DatePicker layoutX="14.0" layoutY="196.0" />
+                        <ComboBox id="time_combo" layoutX="345.0" layoutY="196.0" prefWidth="150.0" promptText="-Choose one-">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="-Choose one-" />
+                                    <String fx:value="Last 5 minutes" />
+                                    <String fx:value="Last 30 minutes" />
+                                    <String fx:value="Last 1 hour" />
+                                    <String fx:value="Last 12 hours" />
+                                    <String fx:value="Last 24 hours" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <ComboBox id="light_val_combo" layoutX="13.0" layoutY="127.0" prefWidth="150.0" promptText="-Choose one-">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="-Choose one-" />
+                                    <String fx:value="High lighting" />
+                                    <String fx:value="Normal lighting" />
+                                    <String fx:value="Dim lighting" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <ComboBox id="prox_val_combo" layoutX="345.0" layoutY="127.0" prefWidth="150.0" promptText="-Choose one-">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="-Choose one-" />
+                                    <String fx:value="High Proximity" />
+                                    <String fx:value="Near Proximity" />
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Button fx:id="controller" layoutX="269.0" layoutY="265.0" mnemonicParsing="false" onAction="#search" text="Search" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Settings">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="273.0" layoutY="14.0" text="Settings" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>

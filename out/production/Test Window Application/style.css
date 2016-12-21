@@ -1,0 +1,11 @@
+.backgroundColourDark {
+    -fx-background-color: #1E1E1E;
+}
+
+.backgroundColourLight {
+    -fx-background-color: #222225;
+}
+
+.textColour {
+    -fx-text-inner-color: white;
+}
