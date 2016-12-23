@@ -6,9 +6,8 @@ import org.eclipse.paho.client.mqttv3.*;
 public class MqttManager implements MqttCallback {
     private MqttClient client;
     /*
-     * If we consider the topics as a tree,                                         |-> light   )
-     * The ID of each client will always be on depth 2 (connections/connected/<ID>/ |           )
-     *                                                                              |-> prox    )
+     * If we consider the topics as a tree,
+     * The ID of each client will always be on depth 2 (connections/connected/<ID>)
      */
     private final String logTopic = "log";
     private final String connectionTopic = "connections";
