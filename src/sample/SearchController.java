@@ -2,10 +2,16 @@ package sample;
 
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.List;
 
 public class SearchController {
@@ -38,9 +44,6 @@ public class SearchController {
         } else {
             messageLabel.setText("");
         }
-        /*SearchResult searchResult = new SearchResult(123, 0, lightValue, proxValue, date, time);
-        searchResult.print();*/
-
 
         DataBaseManager dbManager = new DataBaseManager();
 
@@ -48,13 +51,25 @@ public class SearchController {
                 proxValue, date, time);
         System.out.println("SearchDB complete");
         if (searchResults != null) {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("result_scene.fxml"));
 
-            for (SearchResult result : searchResults) {
-                result.print();
+                AnchorPane resultParent = fxmlLoader.load();
+
+                ResultController resController = fxmlLoader.getController();
+                resController.setResults(searchResults);
+
+                Scene resultScene = new Scene(resultParent);
+                Stage resultStage = new Stage();
+                resultStage.setScene(resultScene);
+                resultStage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             System.out.println("Result is null");
         }
+
 
     }
 }

@@ -1,12 +1,7 @@
 package sample;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class DataBaseManager {
@@ -31,28 +26,24 @@ public class DataBaseManager {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch(SQLException se) {
             se.printStackTrace();
-        } catch(Exception e) {
-            e.printStackTrace();
         }
     }
 
     void saveSettings(String url, String name, boolean cleanSess, int lightThres, int proxThres) {
-        try {
-            statement = conn.createStatement();
-            String sql = "UPDATE settings SET connUrl = \"" + url + "\", clientName=\"" +
-                    name + "\", cleanSession=\"" + String.valueOf(cleanSess) + "\", lightThreshold=\"" + lightThres +
-                    "\"proxThreshold=\"" + proxThres + "\" WHERE id=1;";
-            statement.execute(sql);
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
+        String sql = "UPDATE settings SET connUrl = \"" + url + "\", clientName=\"" +
+                name + "\", cleanSession=\"" + String.valueOf(cleanSess) + "\", lightThreshold=\"" + lightThres +
+                "\"proxThreshold=\"" + proxThres + "\" WHERE id=1;";
+
+        executeStatement(sql);
     }
 
     double[] getThresholds() {
+        String sql = "SELECT lightThreshold, proxThreshold FROM settings WHERE id=1";
+        ResultSet rs = executeQuery(sql);
+
+        assert rs != null;
+
         try {
-            statement = conn.createStatement();
-            String sql = "SELECT lightThreshold, proxThreshold FROM settings WHERE id=1";
-            ResultSet rs = statement.executeQuery(sql);
             //We don't really need that since we
             //only have one row returned
             double light = 0;
@@ -62,7 +53,6 @@ public class DataBaseManager {
                 prox = Double.valueOf(rs.getString("proxThreshold"));
             }
             rs.close();
-            statement.close();
             return new double[] {light, prox};
         } catch(SQLException e) {
             e.printStackTrace();
@@ -73,28 +63,26 @@ public class DataBaseManager {
     void insertEntry(String id, String danger, String lightVal, String proxVal) {
         String date = HelpFunc.getDate();
         String time = HelpFunc.getTime();
-        try {
-            statement = conn.createStatement();
-            String sql = "INSERT INTO log VALUES (" +
-                    id + ", " + danger + ", " + lightVal + ", " + proxVal + ", " + date + ", " + time;
-            statement.execute(sql);
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+        String sql = "INSERT INTO log VALUES (" +
+                id + ", " + danger + ", " + lightVal + ", " + proxVal + ", " + date + ", " + time;
+        executeStatement(sql);
     }
 
     boolean checkIncidentTimes(String id) {
         int[] time = HelpFunc.timeToParts(HelpFunc.getTime());
         int[] date = HelpFunc.dateToParts(HelpFunc.getDate());
 
+        /*
+         * ORDER BY date DESC will give us the most recent date first
+         */
+        String sql = "SELECT date, time FROM log WHERE userID=" + id + " ORDER BY date DESC;";
+        ResultSet rs = executeQuery(sql);
         try {
-            statement = conn.createStatement();
-            /*
-             * ORDER BY date DESC will give us the most recent date first
-             */
-            String sql = "SELECT date, time FROM log WHERE userID=" + id + " ORDER BY date DESC;";
-            ResultSet rs = statement.executeQuery(sql);
+
+
+            assert rs != null;
+
             while (rs.next()) {
                 int[] incidentTime = HelpFunc.timeToParts(rs.getString("time"));
                 int[] incidentDate = HelpFunc.dateToParts(rs.getString("date"));
@@ -142,39 +130,8 @@ public class DataBaseManager {
     }
 
     void updateDanger(String id) {
-        try {
-            statement = conn.createStatement();
-            String sql = "UPDATE log SET levelOfDanger=1 WHERE userID=" + id + ";";
-            statement.execute(sql);
-        } catch (SQLException e) {
-            System.out.println("Exception on inner update");
-            e.printStackTrace();
-
-        }
-    }
-
-    String[] getSettings() {
-        try {
-            statement = conn.createStatement();
-            String sql = "SELECT * FROM settings;";
-            ResultSet rs = statement.executeQuery(sql);
-            String url = null;
-            String name = null;
-            String cleanSess = null;
-            String lightThres = null;
-            String proxThres = null;
-            while (rs.next()) {
-                url = rs.getString("connUrl");
-                name = rs.getString("clientName");
-                cleanSess = String.valueOf(rs.getBoolean("cleanSession"));
-                lightThres = String.valueOf(rs.getInt("lightThreshold"));
-                proxThres = String.valueOf(rs.getInt("proxThreshold"));
-            }
-            return new String[] {url, name, cleanSess, lightThres, proxThres};
-        } catch(SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+        String sql = "UPDATE log SET levelOfDanger=1 WHERE userID=" + id + ";";
+        executeStatement(sql);
     }
 
     List<SearchResult> searchDb(String id, String danger, String light, String prox, String date, String time) {
@@ -218,12 +175,16 @@ public class DataBaseManager {
                     sql += " WHERE ";
                 }
                 int threshold = 0;
-                if (light.equals(Constants.LIGHT_HIGH)) {
-                    threshold = 2000;
-                } else if (light.equals(Constants.LIGHT_NORMAL)) {
-                    threshold = 1000;
-                } else if (light.equals(Constants.LIGHT_DIM)) {
-                    threshold = 500;
+                switch (light) {
+                    case Constants.LIGHT_HIGH:
+                        threshold = 2000;
+                        break;
+                    case Constants.LIGHT_NORMAL:
+                        threshold = 1000;
+                        break;
+                    case Constants.LIGHT_DIM:
+                        threshold = 500;
+                        break;
                 }
                 sql += " lightThreshold > " + threshold;
                 numOfVars++;
@@ -266,50 +227,56 @@ public class DataBaseManager {
                 }
 
                 int interval;
-                if (time.equals(Constants.TIME_MIN_5)) {
-                    interval = 5;
-                } else if (time.equals(Constants.TIME_MIN_30)) {
-                    interval = 30;
-                } else if (time.equals(Constants.TIME_HOURS_1)) {
-                    interval = 60;
-                } else if (time.equals(Constants.TIME_HOURS_12)) {
-                    interval = 720;
-                } else if (time.equals(Constants.TIME_HOURS_24)) {
-                    interval = 1440;
-                } else {
-                    System.out.println("Bad value for time");
-                    interval = 0;
+                switch (time) {
+                    case Constants.TIME_MIN_5:
+                        interval = 5;
+                        break;
+                    case Constants.TIME_MIN_30:
+                        interval = 30;
+                        break;
+                    case Constants.TIME_HOURS_1:
+                        interval = 60;
+                        break;
+                    case Constants.TIME_HOURS_12:
+                        interval = 720;
+                        break;
+                    case Constants.TIME_HOURS_24:
+                        interval = 1440;
+                        break;
+                    default:
+                        System.out.println("Bad value for time");
+                        interval = 0;
+                        break;
                 }
             /*
              * Get all values more recent than interval minutes
              */
-                sql += " time > date_sub(now(), interval " + interval + " minute)";
+                String currDate = HelpFunc.getDate();
+                sql += " time > date_sub(now(), interval " + interval + " minute) AND date=\"" + currDate + "\"";
             }
         }
+        System.out.println("Executing query " + sql);
+        ResultSet rs = executeQuery(sql);
 
-        try {
-
-            statement = conn.createStatement();
-            System.out.println("Executing statement: " + sql);
-            ResultSet rs = statement.executeQuery(sql);
+        assert rs != null;
 
             List<SearchResult> results = new ArrayList<>();
-
+        try {
             while(rs.next()) {
 
                 String userId = rs.getString("userID");
                 int levelOfDanger = rs.getInt("levelOfDanger");
                 String lightVal = rs.getString("lightValue");
                 String proxVal = rs.getString("proxValue");
-                java.sql.Date dt = rs.getDate("date");
-                Time tm = rs.getTime("time");
+                String dt = rs.getString("date");
+                String tm = rs.getString("time");
 
                 SearchResult tmpResult = new SearchResult(userId, levelOfDanger,
                         lightVal, proxVal, dt, tm);
 
                 results.add(tmpResult);
             }
-
+            rs.close();
             return results;
         } catch(SQLException e) {
             e.printStackTrace();
@@ -317,7 +284,162 @@ public class DataBaseManager {
         }
     }
 
+    int getSelectedProfile() {
+        String sql = "SELECT currId FROM settingsProfile";
 
+        ResultSet rs = executeQuery(sql);
+
+        assert rs != null;
+        /*
+         * We only get one row so this is redundant
+         */
+        int currId = -1;
+        try {
+            while (rs.next()) {
+                currId = rs.getInt("currId");
+            }
+            rs.close();
+            return currId;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
+    }
+
+    private void changeProfile(int newId, int oldId) {
+        String sql = "UPDATE settingsProfile SET currId=" + newId + " WHERE currId=" + oldId;
+        executeStatement(sql);
+    }
+
+    /*
+     * Create new profile
+     */
+    void updateProfile(SettingsBundle bundle) {
+        String sql = "UPDATE settings SET connUrl=\"" + bundle.getConnUrl() +
+                "\", clientName=\"" + bundle.getClientName() +
+                "\", cleanSession=" + bundle.getCleanSess() +
+                ", lightThreshold=" + bundle.getLightThres() +
+                ", proxThreshold=" + bundle.getProxThres() +
+                ", profileName=\"" + bundle.getProfName() +
+                "\" WHERE id=" + bundle.getProfId();
+
+        executeStatement(sql);
+    }
+
+    void deleteProfile(SettingsProfile prof) {
+        String sql = "DELETE FROM settings WHERE id=" + prof.getId();
+        executeStatement(sql);
+        changeProfile(1, prof.getId());
+    }
+
+    void saveNewProfile(SettingsBundle bundle) {
+        String sql = "INSERT INTO settings VALUES (\"" +
+                bundle.getConnUrl() + "\", \"" +
+                bundle.getClientName() + "\", " +
+                bundle.getCleanSess() + ", " +
+                bundle.getLightThres() + ", " +
+                bundle.getProxThres() + ", " +
+                bundle.getProfId() + ", \"" +
+                bundle.getProfName() + "\")";
+        System.out.println("Executing query: " + sql);
+        executeStatement(sql);
+    }
+
+    List<SettingsBundle> getAllProfiles() {
+        String sql = "SELECT * FROM settings";
+        try {
+            statement = conn.createStatement();
+            ResultSet rs = executeQuery(sql);
+
+            assert rs != null;
+
+            List<SettingsBundle> bundle = new ArrayList<>();
+
+            while (rs.next()) {
+                String connUrl = rs.getString("connUrl");
+                String clientName = rs.getString("clientName");
+                boolean cleanSess = rs.getInt("cleanSession") == 1;
+                int lightThres = rs.getInt("lightThreshold");
+                int proxThres = rs.getInt("proxThreshold");
+                int id = rs.getInt("id");
+                String profileName = rs.getString("profileName");
+
+                SettingsBundle tmpBundle = new SettingsBundle(
+                        connUrl, clientName, cleanSess, lightThres, proxThres, id, profileName
+                );
+
+                bundle.add(tmpBundle);
+            }
+            rs.close();
+            return bundle;
+        } catch (SQLException oe) {
+            oe.printStackTrace();
+            try {
+                statement.close();
+            } catch (SQLException ie) {
+                ie.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    private void executeStatement(String sql) {
+        try {
+            statement = conn.createStatement();
+            statement.execute(sql);
+
+            statement.close();
+        } catch (SQLException oe) {
+            oe.printStackTrace();
+            try {
+                statement.close();
+            } catch (SQLException ie) {
+                ie.printStackTrace();
+            }
+        }
+    }
+
+    private ResultSet executeQuery(String sql) {
+        try {
+            statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            return rs;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                statement.close();
+            } catch (SQLException ei) {
+                ei.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    int getMaxProfileId() {
+        String sql = "SELECT id FROM settings ORDER BY id DESC";
+        ResultSet rs = executeQuery(sql);
+
+        assert rs != null;
+
+        try {
+            int maxId = -1;
+            if (rs.next()) {
+                maxId = rs.getInt("id");
+            }
+            System.out.println("Returning maxId: " + maxId);
+            return maxId;
+        } catch (SQLException oe) {
+            oe.printStackTrace();
+            try {
+                rs.close();
+            } catch (SQLException ie) {
+                ie.printStackTrace();
+            }
+            return -1;
+        }
+    }
 
     void closeConnection() {
         try {

@@ -41,4 +41,7 @@ class Constants {
 
     static final String NONE = "-Choose one-";
 
+
+    static final String NEW_PROFILE = "New Profile";
+
 }

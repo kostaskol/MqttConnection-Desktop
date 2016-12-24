@@ -21,7 +21,7 @@ public class Window extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        BorderPane page = (BorderPane) FXMLLoader.load(Main.class.getResource("sample.fxml"));
+        BorderPane page = FXMLLoader.load(Main.class.getResource("main_screen.fxml"));
         Scene scene = new Scene(page);
         primaryStage.setScene(scene);
         primaryStage.setTitle("FXML is Simple");

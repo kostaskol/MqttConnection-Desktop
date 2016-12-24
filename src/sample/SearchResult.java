@@ -1,37 +1,75 @@
 package sample;
 
 
-import java.sql.Date;
-import java.sql.Time;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class SearchResult {
-    private String id;
-    private int levelOfDanger;
-    private String lightVal;
-    private String proxVal;
-    private Date date;
-    private Time time;
+    private StringProperty id;
+    private IntegerProperty levelOfDanger;
+    private StringProperty lightVal;
+    private StringProperty proxVal;
+    private StringProperty date;
+    private StringProperty time;
 
-    SearchResult(String id, int danger, String light, String prox, Date date, Time time) {
-        this.id = id;
-        this.levelOfDanger = danger;
-        this.lightVal = light;
-        this.proxVal = prox;
-        this.date = date;
-        this.time = time;
+    SearchResult(String id, int danger, String light, String prox, String date, String time) {
+        this.id = new SimpleStringProperty(id);
+        this.levelOfDanger = new SimpleIntegerProperty(danger);
+        this.lightVal = new SimpleStringProperty(light);
+        this.proxVal = new SimpleStringProperty(prox);
+        this.date = new SimpleStringProperty(date);
+        this.time = new SimpleStringProperty(time);
     }
 
-    String getId() { return this.id; }
+    String getId() {
+        return this.id.get();
+    }
 
-    int getLevelOfDanger() { return this.levelOfDanger; }
+    StringProperty getIdProperty() {
+        return this.id;
+    }
 
-    String getLightVal() { return this.lightVal; }
+    int getLevelOfDanger() {
+        return this.levelOfDanger.get();
+    }
 
-    String getProxVal() { return this.proxVal; }
+    IntegerProperty getLevelOfDangerProperty() {
+        return this.levelOfDanger;
+    }
 
-    Date getDate() { return this.date; }
+    String getLightVal() {
+        return this.lightVal.get();
+    }
 
-    Time getTime() { return this.time; }
+    StringProperty getLightValProperty() {
+        return this.lightVal;
+    }
+
+    String getProxVal() {
+        return this.proxVal.get();
+    }
+
+    StringProperty getProxValProperty() {
+        return this.proxVal;
+    }
+
+    String getDate() {
+        return this.date.get();
+    }
+
+    StringProperty getDateProperty() {
+        return this.date;
+    }
+
+    String getTime() {
+        return this.time.get();
+    }
+
+    StringProperty getTimeProperty() {
+        return this.time;
+    }
 
     void print() {
         System.out.println("Printing Result: ");
