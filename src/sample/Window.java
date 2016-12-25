@@ -27,4 +27,9 @@ public class Window extends Application {
         primaryStage.setTitle("FXML is Simple");
         primaryStage.show();
     }
+
+    @Override
+    public void stop() {
+        Main.close();
+    }
 }

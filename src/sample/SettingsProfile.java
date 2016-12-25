@@ -1,7 +1,7 @@
 package sample;
 
 
-public class SettingsProfile {
+class SettingsProfile {
     private int id;
     private String profileName;
 

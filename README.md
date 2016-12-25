@@ -54,9 +54,34 @@ Project 2016 Phase 2:
         + (!!) Added two more columns to table
         "log" (latitude - longitude)
         
-    + Plants for tomorrow (25/12/16)
+    + Plans for tomorrow (25/12/16)
         + Notify both clients of a high
         possibility of impact
         + Code cleanup - Comments
         + Done (?)
+        
+        
++ 25/12/16:
+    + (✓) Both clients are being notified 
+     of the level of danger change
+    + (+) Added a database manager thread to 
+    handle all the fire and forget events
+    concerning the database
+        + All query related database manager
+        functions continue to be called by
+        DataBaseManager. We could have added
+        them in DataBaseManagerThread, but
+        the usefulness of a thread would have 
+        been nullified
+        + Note: Not all of dbManager's threads 
+        have been replaced by their 
+        respective 
+        dbManagerThread functions
+    + (+) Added some comments
+    
+    + Plans for tomorrow (26/12/16):
+        + Separate code into packages
+        + Complete Comments
+        + Replace all of dbManager functions 
+        with their dbManagerThread counterparts
    

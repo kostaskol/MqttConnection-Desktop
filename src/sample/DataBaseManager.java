@@ -4,39 +4,28 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataBaseManager {
+class DataBaseManager {
 
-    private static final String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost/project16";
 
-    private static final String USER = "root";
-    private static final String PASS = "Kostas6988854656";
-
-    Connection conn;
-    Statement statement;
+    private Connection conn;
+    private Statement statement;
 
     DataBaseManager() {
         try {
             try {
-                Class.forName(JDBC_DRIVER);
+                Class.forName(Constants.JDBC_DRIVER);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //System.out.println("Connecting to database");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
         } catch(SQLException se) {
             se.printStackTrace();
         }
     }
 
-    void saveSettings(String url, String name, boolean cleanSess, int lightThres, int proxThres) {
-        String sql = "UPDATE settings SET connUrl = \"" + url + "\", clientName=\"" +
-                name + "\", cleanSession=\"" + String.valueOf(cleanSess) + "\", lightThreshold=\"" + lightThres +
-                "\"proxThreshold=\"" + proxThres + "\" WHERE id=1;";
-
-        executeStatement(sql);
-    }
-
+    /*
+     * Save a new incident
+     */
     void saveIncident(Incident inc) {
         String sql = "INSERT INTO log " +
                 "VALUES " +
@@ -54,38 +43,6 @@ public class DataBaseManager {
 
     }
 
-    double[] getThresholds() {
-        String sql = "SELECT lightThreshold, proxThreshold FROM settings WHERE id=1";
-        ResultSet rs = executeQuery(sql);
-
-        assert rs != null;
-
-        try {
-            //We don't really need that since we
-            //only have one row returned
-            double light = 0;
-            double prox = 0;
-            while (rs.next()) {
-                light = Double.valueOf(rs.getString("lightThreshold"));
-                prox = Double.valueOf(rs.getString("proxThreshold"));
-            }
-            rs.close();
-            return new double[] {light, prox};
-        } catch(SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    void insertEntry(String id, String danger, String lightVal, String proxVal) {
-        String date = HelpFunc.getDate();
-        String time = HelpFunc.getTime();
-
-        String sql = "INSERT INTO log VALUES (" +
-                id + ", " + danger + ", " + lightVal + ", " + proxVal + ", " + date + ", " + time;
-        executeStatement(sql);
-    }
-
     /*
      * This returns the last incident's time FOR TODAY
      * (the array's last element is the ID of the last incident.
@@ -93,7 +50,10 @@ public class DataBaseManager {
      */
     IncidentTime getLastIncidentTime() {
         String today = HelpFunc.getDate();
-        String sql = "SELECT userID, date, time FROM log ORDER BY date DESC LIMIT 1";
+        /*
+         * This will give us the most recent incident
+         */
+        String sql = "SELECT userID, date, time FROM log ORDER BY date DESC, time DESC LIMIT 1";
 
         ResultSet rs = executeQuery(sql);
 
@@ -102,10 +62,15 @@ public class DataBaseManager {
         try {
             IncidentTime tmp = null;
             if (rs.next()) {
-                if (today.equals(rs.getString("date"))) {
+                /*
+                 * If the most recent incident did not happen today, we return null
+                 */
+                if (!today.equals(rs.getString("date"))) {
                     return null;
                 }
-
+                /*
+                 * We return the most recent incident and the involved user's id
+                 */
                 tmp = new IncidentTime(HelpFunc.timeToParts(rs.getString("time")),
                         rs.getString("userID"));
             }
@@ -118,71 +83,19 @@ public class DataBaseManager {
         }
     }
 
-    boolean checkIncidentTimes() {
-        int[] time = HelpFunc.timeToParts(HelpFunc.getTime());
-        int[] date = HelpFunc.dateToParts(HelpFunc.getDate());
 
-        /*
-         * ORDER BY date DESC will give us the most recent date first
-         */
-        String sql = "SELECT date, time FROM log ORDER BY date DESC;";
-        ResultSet rs = executeQuery(sql);
-        try {
-
-
-            assert rs != null;
-
-            while (rs.next()) {
-                int[] incidentTime = HelpFunc.timeToParts(rs.getString("time"));
-                int[] incidentDate = HelpFunc.dateToParts(rs.getString("date"));
-
-                /*
-                 * Check each of the incident's and current date's values
-                 * If they are all the same, the incident happened on the same day
-                 * If not, we return false
-                 * TODO: Double check this to see if it makes sense
-                 * Could just check if date.equals(currentDate)
-                 */
-                for (int i = 0; i < date.length; i++) {
-                    if (incidentDate[i] != date[i]) {
-                        return false;
-                    }
-                }
-
-                /*
-                 * If both happened on the same day, however,
-                 * we check if they happened within the same minute
-                 */
-                boolean sameTime = true;
-                for (int i = 0; i < time.length - 1; i++) {
-                    if (incidentTime[i] != time[i]) {
-                        sameTime = false;
-                    }
-                }
-
-                if (!sameTime) {
-                    continue;
-                }
-
-                /*
-                 * If we've reached this point,
-                 */
-                if (incidentTime[2] == time[2]) {
-                    return true;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return false;
-    }
-
+    /*
+     * Change the danger level of the specific ID to 1 (DANGER_HIGH)
+     */
     void updateDanger(String id) {
-        String sql = "UPDATE log SET levelOfDanger=1 WHERE userID=" + id + ";";
+        String sql = "UPDATE log SET levelOfDanger=1 WHERE userID=\"" + id + "\";";
         executeStatement(sql);
     }
 
+    /*
+     * Checks the provided filters and
+     * returns the query's results
+     */
     List<Incident> searchDb(String id, String danger, String light, String prox, String date, String time) {
         /*
          * We check each of the variables and add them to the
@@ -296,9 +209,10 @@ public class DataBaseManager {
                         interval = 0;
                         break;
                 }
-            /*
-             * Get all values more recent than interval minutes
-             */
+
+                /*
+                 * Get all values more recent than interval minutes (for today)
+                 */
                 String currDate = HelpFunc.getDate();
                 sql += " time > date_sub(now(), interval " + interval + " minute) AND date=\"" + currDate + "\"";
             }
@@ -333,6 +247,9 @@ public class DataBaseManager {
         }
     }
 
+    /*
+     * Returns the id of the currently selected profile
+     */
     int getSelectedProfile() {
         String sql = "SELECT currId FROM settingsProfile";
 
@@ -356,23 +273,25 @@ public class DataBaseManager {
 
     }
 
-    private void changeProfile(int newId) {
-        int oldId = getSelectedProfile();
-        String sql = "UPDATE settingsProfile SET currId=" + newId + " WHERE currId=" + oldId;
-        executeStatement(sql);
-    }
-
+    /*
+     * Used when we want to change the current profile to another specific one
+     */
     private void changeProfile(int newId, int oldId) {
         String sql = "UPDATE settingsProfile SET currId=" + newId + " WHERE currId=" + oldId;
         executeStatement(sql);
     }
 
+    /*
+     * Used when we want to change the selected profile to another one
+     */
     void switchProfile(int newId) {
-        changeProfile(newId);
+        int oldId = getSelectedProfile();
+        String sql = "UPDATE settingsProfile SET currId=" + newId + " WHERE currId=" + oldId;
+        executeStatement(sql);
     }
 
     /*
-     * Create new profile
+     * Update profile
      */
     void updateProfile(SettingsBundle bundle) {
         String sql = "UPDATE settings SET connUrl=\"" + bundle.getConnUrl() +
@@ -383,9 +302,9 @@ public class DataBaseManager {
                 ", profileName=\"" + bundle.getProfName() +
                 "\", port=\"" + bundle.getPort() +
                 "\" WHERE id=" + bundle.getProfId();
-
+        System.out.println("Executing statement: " + sql);
         executeStatement(sql);
-        changeProfile(bundle.getProfId());
+        switchProfile(bundle.getProfId());
     }
 
     void deleteProfile(SettingsProfile prof) {
@@ -394,6 +313,9 @@ public class DataBaseManager {
         changeProfile(0, prof.getId());
     }
 
+    /*
+     * Create new profile
+     */
     void saveNewProfile(SettingsBundle bundle) {
         String sql = "INSERT INTO settings VALUES (\"" +
                 bundle.getConnUrl() + "\", \"" +
@@ -411,6 +333,7 @@ public class DataBaseManager {
     SettingsBundle getProfile(int selectedProfile) {
         String sql = "SELECT * FROM settings WHERE id=" + selectedProfile;
         ResultSet rs = executeQuery(sql);
+        assert rs != null;
         try {
             SettingsBundle settings = null;
             while (rs.next()) {
@@ -477,12 +400,17 @@ public class DataBaseManager {
         }
     }
 
+    /*
+     * Returns a client's average light value
+     * or creates a new one if none exists
+     */
     ClientAverage getClientAverage(String clientId) {
         /*
          * Get client's average lighting
          */
         String sql = "SELECT * FROM clientAverages WHERE id=\"" + clientId + "\"";
         ResultSet rs = executeQuery(sql);
+        assert rs != null;
         try {
             ClientAverage client = null;
             if (rs.next()) {
@@ -542,6 +470,9 @@ public class DataBaseManager {
         executeStatement(sql);
     }
 
+    /*
+     * Help function to execute a statement
+     */
     private void executeStatement(String sql) {
         try {
             statement = conn.createStatement();
@@ -558,11 +489,13 @@ public class DataBaseManager {
         }
     }
 
+    /*
+     * Help function to execute a query
+     */
     private ResultSet executeQuery(String sql) {
         try {
             statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-            return rs;
+            return statement.executeQuery(sql);
 
         } catch (SQLException e) {
             e.printStackTrace();
