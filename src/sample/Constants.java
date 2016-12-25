@@ -43,5 +43,27 @@ class Constants {
 
 
     static final String NEW_PROFILE = "New Profile";
+    static final String DEFAULT_PROFILE = "Default";
+
+    static final int ROWS_PER_PAGE = 18;
+
+
+    /*
+     * Mqtt Constants
+     */
+    static final String LOG_TOPIC = "log";
+    static final String CONNECTION_TOPIC = "connections";
+    static final String NEW_CONNECTION_TOPIC = CONNECTION_TOPIC + "/newConnections";
+    static final String NEW_CONNECTION_TOPIC_SIMPLE = "newConnections";
+    static final String CONNECTED_TOPIC = CONNECTION_TOPIC + "/connected";
+    static final String CONNECTED_TOPIC_SIMPLE = "connected";
+
+
+    /*
+     * Warning Control
+     */
+    static final String WARNING = "warning";
+    static final String NO_WARNING = "no warning";
+    static final String STOP_WARNING = "stop warning";
 
 }

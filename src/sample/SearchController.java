@@ -2,14 +2,10 @@ package sample;
 
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,22 +43,13 @@ public class SearchController {
 
         DataBaseManager dbManager = new DataBaseManager();
 
-        List<SearchResult> searchResults = dbManager.searchDb(userId, levelOfDanger, lightValue,
+        List<Incident> incidents = dbManager.searchDb(userId, levelOfDanger, lightValue,
                 proxValue, date, time);
         System.out.println("SearchDB complete");
-        if (searchResults != null) {
+        if (incidents != null) {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("result_scene.fxml"));
-
-                AnchorPane resultParent = fxmlLoader.load();
-
-                ResultController resController = fxmlLoader.getController();
-                resController.setResults(searchResults);
-
-                Scene resultScene = new Scene(resultParent);
-                Stage resultStage = new Stage();
-                resultStage.setScene(resultScene);
-                resultStage.show();
+                SearchResultsWindow searchWindow = new SearchResultsWindow(incidents);
+                searchWindow.showWindow();
             } catch (Exception e) {
                 e.printStackTrace();
             }

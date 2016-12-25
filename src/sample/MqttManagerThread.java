@@ -14,11 +14,21 @@ public class MqttManagerThread extends Thread {
 
     @Override
     public void run() {
-        manager = new MqttManager();
         System.out.println ("Connecting to mqtt client");
+        manager = new MqttManager();
     }
 
     void disconnect() {
         manager.disconnect();
+    }
+
+    void reconnectIfNecessary() {
+        /*
+         * MqttManager.reconnectIfNecessary will check if
+         * any of the MQTT client's settings have been changed.
+         * If not, it will update the object's current settings (thresholds)
+         * If they have, it will try to reconnect
+         */
+        manager.reconnectIfNecessary();
     }
 }

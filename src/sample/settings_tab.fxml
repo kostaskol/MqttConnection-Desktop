@@ -11,8 +11,8 @@
                 <Label layoutX="14.0" layoutY="21.0" text="Settings"/>
                 <ComboBox fx:id="profile" layoutX="436.0" layoutY="16.0" onAction="#handleComboBoxAction"
                           prefWidth="150.0" promptText="Profile"/>
-                <Label id="warning_label" fx:id="warningLabel" layoutX="264.0" layoutY="13.0" prefHeight="16.0"
-                       prefWidth="64.0"/>
+                <Label id="warning_label" fx:id="warningLabel" layoutX="79.0" layoutY="20.0" prefHeight="16.0"
+                       prefWidth="350.0"/>
             </children>
         </AnchorPane>
     </top>
@@ -25,10 +25,14 @@
                         <Label layoutX="14.0" layoutY="14.0" text="MQTT Settings"/>
                         <Label layoutX="76.0" layoutY="43.0" text="Connection URL"/>
                         <Label layoutX="342.0" layoutY="43.0" text="Main (this) client name"/>
-                        <TextField fx:id="connUrlText" layoutX="78.0" layoutY="59.0"/>
+                        <TextField fx:id="connUrlText" layoutX="78.0" layoutY="59.0" prefHeight="26.0"
+                                   prefWidth="140.0"/>
                         <TextField fx:id="clientNameText" layoutX="342.0" layoutY="59.0"/>
                         <CheckBox fx:id="cleanSessCheck" layoutX="78.0" layoutY="115.0" mnemonicParsing="false"
                                   text="Clean session"/>
+                        <TextField fx:id="portText" layoutX="223.0" layoutY="59.0" prefHeight="26.0" prefWidth="54.0"/>
+                        <Label layoutX="223.0" layoutY="43.0" text="Port"/>
+                        <Label layoutX="218.0" layoutY="64.0" text=":"/>
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -40,12 +44,11 @@
                         <TextField fx:id="proxThresText" layoutX="339.0" layoutY="58.0"/>
                         <Button fx:id="save" layoutX="31.0" layoutY="111.0" mnemonicParsing="false" onAction="#save"
                                 prefHeight="26.0" prefWidth="115.0" text="Save" textAlignment="CENTER"/>
-                        <Button layoutX="299.0" layoutY="111.0" mnemonicParsing="false" prefHeight="26.0"
-                                prefWidth="115.0" text="Save &amp; Apply"/>
-                        <Button layoutX="163.0" layoutY="111.0" mnemonicParsing="false" prefHeight="26.0"
-                                prefWidth="115.0" text="Apply"/>
-                        <Button cancelButton="true" layoutX="431.0" layoutY="111.0" mnemonicParsing="false"
-                                onAction="#deleteProfile" text="Delete Profile" textFill="#f50707"/>
+                        <Button fx:id="apply" layoutX="242.0" layoutY="111.0" mnemonicParsing="false" onAction="#apply"
+                                prefHeight="26.0" prefWidth="115.0" text="Apply"/>
+                        <Button fx:id="delete" cancelButton="true" layoutX="431.0" layoutY="111.0"
+                                mnemonicParsing="false" onAction="#deleteProfile" text="Delete Profile"
+                                textFill="#f50707"/>
                     </children>
                 </AnchorPane>
             </items>

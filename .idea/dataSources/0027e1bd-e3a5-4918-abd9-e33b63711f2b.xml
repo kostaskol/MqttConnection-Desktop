@@ -9,62 +9,91 @@
     <schema id="3" parent="1" name="information_schema"/>
     <schema id="4" parent="1" name="mysql"/>
     <schema id="5" parent="1" name="performance_schema"/>
-    <table id="6" parent="2" name="log"/>
-    <table id="7" parent="2" name="settings"/>
-    <table id="8" parent="2" name="settingsProfile"/>
-    <column id="9" parent="6" name="userID">
+    <table id="6" parent="2" name="clientAverages"/>
+    <table id="7" parent="2" name="log"/>
+    <table id="8" parent="2" name="settings"/>
+    <table id="9" parent="2" name="settingsProfile"/>
+    <column id="10" parent="6" name="id">
       <Position>1</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="10" parent="6" name="levelOfDanger">
+    <column id="11" parent="6" name="lightAvg">
+      <Position>2</Position>
+      <DataType>float|0</DataType>
+    </column>
+    <column id="12" parent="6" name="times">
+      <Position>3</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="13" parent="6" name="lightSum">
+      <Position>4</Position>
+      <DataType>float|0</DataType>
+    </column>
+    <column id="14" parent="7" name="userID">
+      <Position>1</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="15" parent="7" name="levelOfDanger">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
     </column>
-    <column id="11" parent="6" name="lightValue">
+    <column id="16" parent="7" name="lightValue">
       <Position>3</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="12" parent="6" name="proxValue">
+    <column id="17" parent="7" name="proxValue">
       <Position>4</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="13" parent="6" name="date">
+    <column id="18" parent="7" name="date">
       <Position>5</Position>
       <DataType>date|0</DataType>
     </column>
-    <column id="14" parent="6" name="time">
+    <column id="19" parent="7" name="time">
       <Position>6</Position>
       <DataType>time|0</DataType>
     </column>
-    <column id="15" parent="7" name="connUrl">
-      <Position>1</Position>
-      <DataType>text|0</DataType>
-    </column>
-    <column id="16" parent="7" name="clientName">
-      <Position>2</Position>
-      <DataType>text|0</DataType>
-    </column>
-    <column id="17" parent="7" name="cleanSession">
-      <Position>3</Position>
-      <DataType>tinyint(1)|0</DataType>
-    </column>
-    <column id="18" parent="7" name="lightThreshold">
-      <Position>4</Position>
-      <DataType>int(11)|0</DataType>
-    </column>
-    <column id="19" parent="7" name="proxThreshold">
-      <Position>5</Position>
-      <DataType>int(11)|0</DataType>
-    </column>
-    <column id="20" parent="7" name="id">
-      <Position>6</Position>
-      <DataType>int(11)|0</DataType>
-    </column>
-    <column id="21" parent="7" name="profileName">
+    <column id="20" parent="7" name="latitude">
       <Position>7</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="22" parent="8" name="currId">
+    <column id="21" parent="7" name="longitude">
+      <Position>8</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="22" parent="8" name="connUrl">
+      <Position>1</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="23" parent="8" name="clientName">
+      <Position>2</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="24" parent="8" name="cleanSession">
+      <Position>3</Position>
+      <DataType>tinyint(1)|0</DataType>
+    </column>
+    <column id="25" parent="8" name="lightThreshold">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="26" parent="8" name="proxThreshold">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="27" parent="8" name="id">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="28" parent="8" name="profileName">
+      <Position>7</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="29" parent="8" name="port">
+      <Position>8</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="30" parent="9" name="currId">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
     </column>

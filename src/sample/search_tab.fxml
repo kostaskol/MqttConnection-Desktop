@@ -26,7 +26,6 @@
                     <String fx:value="-Choose one-"/>
                     <String fx:value="Danger Low"/>
                     <String fx:value="Danger High"/>
-                    <String fx:value="Both"/>
                 </FXCollections>
             </items>
         </ComboBox>
