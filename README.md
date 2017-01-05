@@ -7,9 +7,9 @@ Project 2016 Phase 2:
 !!: Changed
 
 + 21/12/16:
-    + (+) Created and tested sample MQTT Manager
+    + (+) Created and tested DataBaseManager MQTT Manager
     + (+) Created some of the DBManager
-    + (+) Created a sample window
+    + (+) Created a DataBaseManager window
     + (+) Created project16 DataBase in MariaDB
         + Tables: 
             + log: Where incidents are stored 
