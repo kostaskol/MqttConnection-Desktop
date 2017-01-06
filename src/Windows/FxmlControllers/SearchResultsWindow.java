@@ -1,7 +1,8 @@
-package Windows;
+package Windows.FxmlControllers;
 
 import BundleClasses.Constants;
 import BundleClasses.Incident;
+import Managers.MqttManager.MqttManager;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -14,12 +15,14 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class SearchResultsWindow {
+class SearchResultsWindow {
     private final TableView<Incident> table = createTable();
     private List<Incident> results;
 
-    public SearchResultsWindow(List<Incident> results) {
+    SearchResultsWindow(List<Incident> results) {
         this.results = results;
+        MqttManager.publish(Constants.LOG_TOPIC,
+                "WINDOW | QUERY RESULTS | Came up with " + results.size() + " results");
     }
 
     private TableView<Incident> createTable() {

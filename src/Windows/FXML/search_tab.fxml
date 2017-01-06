@@ -7,7 +7,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity"
             prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.76-ea"
-            fx:controller="Windows.SearchController" fx:id="search_tab">
+            fx:controller="Windows.FxmlControllers.SearchController" fx:id="search_tab">
     <children>
         <Label layoutX="251.0" layoutY="14.0" text="Search by field"/>
         <TextField id="id_inp" fx:id="userIdText" layoutX="96.0" layoutY="60.0"
@@ -67,7 +67,5 @@
         </ComboBox>
         <Button layoutX="269.0" layoutY="265.0" mnemonicParsing="false" onAction="#search"
                 text="Search"/>
-        <Label id="message_label" fx:id="messageLabel" layoutX="92.0" layoutY="236.0"
-               prefHeight="16.0" prefWidth="411.0"/>
     </children>
 </AnchorPane>

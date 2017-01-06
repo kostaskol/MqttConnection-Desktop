@@ -1,6 +1,8 @@
 package BundleClasses;
 
-
+/**
+ * Bundle class to store query results for table settings
+ */
 public class SettingsBundle {
     private String connUrl;
     private String port;

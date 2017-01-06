@@ -7,9 +7,9 @@ Project 2016 Phase 2:
 !!: Changed
 
 + 21/12/16:
-    + (+) Created and tested DataBaseManager MQTT Manager
+    + (+) Created and tested Managers.DataBaseManager MQTT Manager
     + (+) Created some of the DBManager
-    + (+) Created a DataBaseManager window
+    + (+) Created a Managers.DataBaseManager window
     + (+) Created project16 DataBase in MariaDB
         + Tables: 
             + log: Where incidents are stored 
@@ -69,7 +69,7 @@ Project 2016 Phase 2:
     concerning the database
         + All query related database manager
         functions continue to be called by
-        DataBaseManager. We could have added
+        Managers.DataBaseManager. We could have added
         them in DataBaseManagerThread, but
         the usefulness of a thread would have 
         been nullified

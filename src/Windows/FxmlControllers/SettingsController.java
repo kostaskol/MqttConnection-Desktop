@@ -1,12 +1,13 @@
-package Windows;
+package Windows.FxmlControllers;
 
 
 import BundleClasses.Constants;
 import BundleClasses.Profile;
 import BundleClasses.SettingsBundle;
-import DataBaseManager.DataBaseManager;
-import DataBaseManager.DataBaseManagerThread;
 import Main.Main;
+import Managers.DataBaseManager.DataBaseManager;
+import Managers.DataBaseManager.DataBaseManagerThread;
+import Managers.MqttManager.MqttManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -36,8 +37,6 @@ public class SettingsController implements Initializable {
     @FXML
     private TextField proxThresText;
     @FXML
-    private Label warningLabel;
-    @FXML
     private ComboBox<String> profile;
     @FXML
     private TextField portText;
@@ -52,14 +51,14 @@ public class SettingsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         /*
-         * We don't allow the light and proximity threshold text fields
+         * We don't allow the light and proximity threshold text fields to
          * have non - numeric values
          */
         lightThresText.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
         proxThresText.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
         /*
-         * Show the selected profile's settings
+         * Get the selected profile's settings
          */
         DataBaseManager dbManager = new DataBaseManager();
 
@@ -84,15 +83,33 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
-    private void save() {
+    private SettingsBundle save() {
+        /*
+         * If we try to alter the default profile, warn the user
+         * and stop
+         */
+        String profileName = profile.getSelectionModel().getSelectedItem();
+        if (selectedProfile.getProfileId() == 0 && !profileName.equals(Constants.NEW_PROFILE)) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Default Profile");
+            alert.setHeaderText("You cannot alter the default profile");
+            alert.setContentText("Create a new profile instead.\n" +
+                    "Click on the top right dropdown menu \n" +
+                    "and select \"New Profile\"");
+            alert.show();
+            return null;
+        }
 
+        /*
+         * Otherwise, get the fields' values
+         */
         String connUrl = connUrlText.getText();
         String clientName = clientNameText.getText();
         String port = portText.getText();
         boolean cleanSess = cleanSessCheck.isSelected();
         int lightThres;
         int proxThres;
-        warningLabel.setText("");
+
         /*
          * If the user didn't enter a light or proximity threshold,
          * notify them and stop
@@ -101,31 +118,43 @@ public class SettingsController implements Initializable {
             lightThres = Integer.parseInt(lightThresText.getText());
             proxThres = Integer.parseInt(proxThresText.getText());
         } catch (NumberFormatException e) {
-            warningLabel.setText("Please fill in all of the below form's fields");
-            return;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Bad Values");
+            alert.setHeaderText("You have inserted some bad values\n" +
+                    "for the light or proximity threshold fields.");
+            alert.show();
+            return null;
         }
 
 
         if (connUrl.equals("") || clientName.equals("") || port.equals("")) {
-            warningLabel.setText("Please fill in all of the below form's fields");
-            return;
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Empty fields");
+            alert.setHeaderText("It seems you have not filled in all of the\n" +
+                    "form's fields.");
+            alert.show();
+            return null;
         }
 
         /*
          * We don't allow the light threshold to be greater than 75%
          */
         if (lightThres > 75) {
-            warningLabel.setText("The light threshold cannot be greater than 75%");
-            return;
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Bad light threshold value");
+            alert.setHeaderText("The light threshold cannot be greater\n" +
+                    "than 75%");
+            alert.show();
+            return null;
         }
         /*
          * It is dangerous to set the proximity's threshold to a value above 5
          * due to the alert's text
          */
-        if (proxThres > 5) {
+        if (proxThres > 0) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Warning!");
-            alert.setHeaderText("Most android phones have a max proximity sensor range of 5." +
+            alert.setHeaderText("Some android phones have a max proximity sensor range of 1." +
                     "\nSetting the threshold any higher than that could cause the device" +
                     "\nto continuously send out the warning signal.");
             alert.setContentText("Are you sure you wish to proceed?");
@@ -136,15 +165,15 @@ public class SettingsController implements Initializable {
              */
             if (result.isPresent()) {
                 if (result.get() == ButtonType.CANCEL) {
-                    return;
+                    return null;
                 }
             } else {
-                return;
+                return null;
             }
         }
 
 
-        if (profile.getSelectionModel().getSelectedItem().equals(Constants.NEW_PROFILE)) {
+        if (profileName.equals(Constants.NEW_PROFILE)) {
 
             // If the user wants to create a new profile
             String profName;
@@ -183,14 +212,11 @@ public class SettingsController implements Initializable {
                         }
                     }
                 } else {
-                    return;
+                    return null;
                 }
             } while (!allGood);
 
-            /*
-             * TODO: Check if this code produces errors in different machines
-             * (if the combo tries to update faster than the save profile thread has finished)
-             */
+
             // Save the new profile
             DataBaseManager dbManager = new DataBaseManager();
             SettingsBundle bundle = new SettingsBundle(
@@ -200,8 +226,18 @@ public class SettingsController implements Initializable {
             DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
                     "SAVE NEW PROFILE", Constants.SAVE_NEW_PROFILE, bundle);
             dbManagerThread.start();
+            try {
+                dbManagerThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
+            // And after the profile has been saved,
+            // update the profile combo box with the new value
             updateProfilesCombo();
+            MqttManager.publish(Constants.LOG_TOPIC,
+                    "WINDOW | SETTINGS | Saving new profile");
+            return bundle;
         } else {
             /*
              * If we're only updating an existing profile
@@ -213,20 +249,13 @@ public class SettingsController implements Initializable {
                     || !clientName.equals(startingClientName)
                     || !port.equals(startingPort)
                     || cleanSess != startingCleanSess) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Warning");
-                alert.setHeaderText("A change you have made requires the MQTT client to reconnect.\n " +
-                        "This could cause problems if an android phone is connected.");
-                alert.setContentText("Are you sure you wish to continue?");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent()) {
-                    if (result.get() == ButtonType.OK) {
-                        updateProfile(connUrl, port, clientName, cleanSess, lightThres, proxThres);
-                    }
-                }
-            } else {
-                updateProfile(connUrl, port, clientName, cleanSess, lightThres, proxThres);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Warning!");
+                alert.setHeaderText("The MQTT connection settings will take effect\n" +
+                        "the next time you start the main client");
+                alert.show();
             }
+            return updateProfile(connUrl, port, clientName, cleanSess, lightThres, proxThres);
         }
     }
 
@@ -234,8 +263,8 @@ public class SettingsController implements Initializable {
      * Called by save
      * Updates the selected profile
      */
-    private void updateProfile(String connUrl, String port, String clientName, boolean cleanSess,
-                               int lightThres, int proxThres) {
+    private SettingsBundle updateProfile(String connUrl, String port, String clientName, boolean cleanSess,
+                                         int lightThres, int proxThres) {
         int currId = selectedProfile.getProfileId();
         String profName = selectedProfile.getProfileName();
         SettingsBundle bundle = new SettingsBundle(
@@ -246,6 +275,7 @@ public class SettingsController implements Initializable {
         dbManagerThread.start();
 
         this.profiles.add(bundle);
+        return bundle;
     }
 
     /*
@@ -279,10 +309,13 @@ public class SettingsController implements Initializable {
         for (SettingsBundle tmpProfile : profiles) {
             if (profileName.equals(tmpProfile.getProfName())) {
                 if (profileName.equals(Constants.DEFAULT_PROFILE)) {
-                    warningLabel.setText("You cannot delete the default profile");
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Default Profile");
+                    alert.setHeaderText("You cannot delete the default profile");
+                    alert.show();
                 } else {
-                    warningLabel.setText("");
-                    System.out.println("Deleting profile: " + tmpProfile.getProfName());
+                    MqttManager.publish(Constants.LOG_TOPIC,
+                            "WINDOW | SETTINGS | Deleting Profile");
                     DataBaseManager dbManager = new DataBaseManager();
                     Profile delProfile = new Profile(tmpProfile.getProfId()
                             , tmpProfile.getProfName());
@@ -321,6 +354,8 @@ public class SettingsController implements Initializable {
                          */
                         DataBaseManager dbManager = new DataBaseManager();
                         dbManager.switchProfile(tmpProfile.getProfId());
+                        selectedProfile = new Profile(tmpProfile.getProfId(),
+                                tmpProfile.getProfName());
                     }
                 }
             }
@@ -329,8 +364,11 @@ public class SettingsController implements Initializable {
 
     @FXML
     private void apply() {
-        save();
-        Main.settingsChanged();
+        SettingsBundle bundle = save();
+        if (bundle == null) {
+            return;
+        }
+        Main.updateThresholds(bundle);
     }
 
 }

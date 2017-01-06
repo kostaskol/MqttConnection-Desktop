@@ -1,6 +1,10 @@
 package BundleClasses;
 
 
+/**
+ * Helpful bundle class that only holds time/date (as an int array)
+ * and the involved ID of an incident.
+ */
 public class IncidentTime {
     private int[] time;
     private int[] date;

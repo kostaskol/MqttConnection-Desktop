@@ -1,17 +1,21 @@
-package Windows;
+package Windows.FxmlControllers;
 
 
+import BundleClasses.Constants;
 import BundleClasses.Incident;
-import DataBaseManager.DataBaseManager;
+import Managers.DataBaseManager.DataBaseManager;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Controller class
+ */
 public class SearchController {
 
     @FXML private TextField userIdText;
@@ -20,7 +24,6 @@ public class SearchController {
     @FXML private ComboBox<String> proxValueCombo;
     @FXML private DatePicker datePicker;
     @FXML private ComboBox<String> timeCombo;
-    @FXML private Label messageLabel;
 
     public void search() {
         String userId = userIdText.getText();
@@ -28,8 +31,13 @@ public class SearchController {
         String lightValue = lightValueCombo.getSelectionModel().getSelectedItem();
         String proxValue = proxValueCombo.getSelectionModel().getSelectedItem();
 
-        LocalDate localDate = datePicker.getValue();
+        LocalDate localDate = null;
+        if (datePicker != null) {
+            localDate = datePicker.getValue();
+        }
+
         String date = null;
+
         if (localDate != null) {
             date = localDate.getYear() + "/" + localDate.getMonthValue() + "/" +
                     localDate.getDayOfMonth();
@@ -37,10 +45,12 @@ public class SearchController {
 
         String time = timeCombo.getSelectionModel().getSelectedItem();
 
-        if (localDate != null && !time.equals("")) {
-            messageLabel.setText("You cannot search by both Date and Time");
-        } else {
-            messageLabel.setText("");
+        if (localDate != null && !time.equals(Constants.NONE)) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Incorrect field values");
+            alert.setHeaderText("You cannot search by both date AND time");
+            alert.show();
+            return;
         }
 
         DataBaseManager dbManager = new DataBaseManager();

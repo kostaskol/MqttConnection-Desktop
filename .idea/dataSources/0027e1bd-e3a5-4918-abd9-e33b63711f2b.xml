@@ -15,7 +15,8 @@
     <table id="9" parent="2" name="settingsProfile"/>
     <column id="10" parent="6" name="id">
       <Position>1</Position>
-      <DataType>text|0</DataType>
+      <DataType>varchar(10)|0</DataType>
+      <NotNull>1</NotNull>
     </column>
     <column id="11" parent="6" name="lightAvg">
       <Position>2</Position>
@@ -33,71 +34,85 @@
       <Position>5</Position>
       <DataType>tinyint(4)|0</DataType>
     </column>
-    <column id="15" parent="7" name="userID">
-      <Position>1</Position>
-      <DataType>text|0</DataType>
-    </column>
+    <key id="15" parent="6" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
     <column id="16" parent="7" name="levelOfDanger">
-      <Position>2</Position>
+      <Position>1</Position>
       <DataType>int(11)|0</DataType>
     </column>
     <column id="17" parent="7" name="lightValue">
-      <Position>3</Position>
-      <DataType>text|0</DataType>
-    </column>
-    <column id="18" parent="7" name="proxValue">
-      <Position>4</Position>
-      <DataType>text|0</DataType>
-    </column>
-    <column id="19" parent="7" name="date">
-      <Position>5</Position>
-      <DataType>date|0</DataType>
-    </column>
-    <column id="20" parent="7" name="time">
-      <Position>6</Position>
-      <DataType>time|0</DataType>
-    </column>
-    <column id="21" parent="7" name="latitude">
-      <Position>7</Position>
-      <DataType>text|0</DataType>
-    </column>
-    <column id="22" parent="7" name="longitude">
-      <Position>8</Position>
-      <DataType>text|0</DataType>
-    </column>
-    <column id="23" parent="8" name="connUrl">
-      <Position>1</Position>
-      <DataType>text|0</DataType>
-    </column>
-    <column id="24" parent="8" name="clientName">
       <Position>2</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="25" parent="8" name="cleanSession">
+    <column id="18" parent="7" name="proxValue">
       <Position>3</Position>
-      <DataType>tinyint(1)|0</DataType>
+      <DataType>text|0</DataType>
     </column>
-    <column id="26" parent="8" name="lightThreshold">
+    <column id="19" parent="7" name="date">
       <Position>4</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>date|0</DataType>
     </column>
-    <column id="27" parent="8" name="proxThreshold">
+    <column id="20" parent="7" name="time">
       <Position>5</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>time|0</DataType>
     </column>
-    <column id="28" parent="8" name="id">
+    <column id="21" parent="7" name="latitude">
       <Position>6</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>text|0</DataType>
     </column>
-    <column id="29" parent="8" name="profileName">
+    <column id="22" parent="7" name="longitude">
       <Position>7</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="30" parent="8" name="port">
+    <column id="23" parent="7" name="id">
       <Position>8</Position>
+      <DataType>varchar(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="24" parent="7" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="25" parent="8" name="connUrl">
+      <Position>1</Position>
       <DataType>text|0</DataType>
     </column>
-    <column id="31" parent="9" name="currId">
+    <column id="26" parent="8" name="clientName">
+      <Position>2</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="27" parent="8" name="cleanSession">
+      <Position>3</Position>
+      <DataType>tinyint(1)|0</DataType>
+    </column>
+    <column id="28" parent="8" name="lightThreshold">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="29" parent="8" name="proxThreshold">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="30" parent="8" name="profileName">
+      <Position>6</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="31" parent="8" name="port">
+      <Position>7</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="32" parent="8" name="profileID">
+      <Position>8</Position>
+      <DataType>int(10)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="33" parent="8" name="PRIMARY">
+      <ColNames>profileID</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="34" parent="9" name="currId">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
     </column>

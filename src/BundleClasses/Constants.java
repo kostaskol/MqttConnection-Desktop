@@ -1,7 +1,20 @@
 package BundleClasses;
 
-
+/**
+ * Constants bundle
+ */
 public class Constants {
+    /*
+     * Managers.DataBaseManager constants
+     * Please change these to successfully connect to your
+     * local database
+     */
+    public static final String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
+    public static final String DB_URL = "jdbc:mysql://localhost/project16";
+
+    public static final String USER = "root";
+    public static final String PASS = "Kostas6988854656";
+
     /*
      * Mqtt subscription message offsets
      */
@@ -85,7 +98,7 @@ public class Constants {
 
     /*
      * DataBaseManagerThread constants
-     * (used to run a specific function)
+     * (used to run a specific function from DataBaseManagerThread)
      */
     public static final String SAVE_INCIDENT = "save incident";
     public static final String UPDATE_DANGER = "update danger";
@@ -96,15 +109,5 @@ public class Constants {
     public static final String INSERT_CLIENT_AVERAGE = "insert client average";
     public static final String UPDATE_CLIENT_AVERAGE = "update client average";
     public static final String SWITCH_LOD = "update danger";
-
-
-    /*
-     * DataBaseManager constants
-     */
-    public static final String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
-    public static final String DB_URL = "jdbc:mysql://localhost/project16";
-
-    public static final String USER = "root";
-    public static final String PASS = "Kostas6988854656";
 
 }

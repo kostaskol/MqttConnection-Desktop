@@ -22,10 +22,10 @@ public class Window extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        BorderPane page = FXMLLoader.load(Main.class.getResource("/Windows/main_screen.fxml"));
+        BorderPane page = FXMLLoader.load(Main.class.getResource("/Windows/FXML/main_screen.fxml"));
         Scene scene = new Scene(page);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("FXML is Simple");
+        primaryStage.setTitle("Super Project - Desktop");
         primaryStage.show();
     }
 

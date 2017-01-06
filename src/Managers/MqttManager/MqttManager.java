@@ -1,8 +1,8 @@
-package MqttManager;
+package Managers.MqttManager;
 
 import BundleClasses.Constants;
 import BundleClasses.SettingsBundle;
-import DataBaseManager.DataBaseManager;
+import Managers.DataBaseManager.DataBaseManager;
 import org.eclipse.paho.client.mqttv3.*;
 
 public class MqttManager implements MqttCallback {
@@ -41,6 +41,8 @@ public class MqttManager implements MqttCallback {
     }
 
     private void connectClient() {
+        publish(Constants.LOG_TOPIC,
+                "MQTT | Connecting to MQTT client");
         client = getClient();
         assert client != null;
         client.setCallback(this);
@@ -50,53 +52,35 @@ public class MqttManager implements MqttCallback {
                 Constants.MAIN_CLIENT_DISCONNECTING.getBytes(), 2, false);
         connOpts.setMaxInflight(1000);
         connect(connOpts);
-        publish(Constants.LOG_TOPIC, currentSettings.getClientName() + " Connected");
+        publish(Constants.LOG_TOPIC,
+                "MQTT | " + currentSettings.getClientName() + " connected");
         subscribe(2, Constants.NEW_CONNECTION_TOPIC);
         subscribe(2, Constants.REQUEST_ACKNOWLEDGEMENT_TOPIC);
     }
 
-    static void publish(String topic, String message) {
-        System.out.println("Publishing " + message + " @ " + topic);
-        try {
-            client.publish(topic, message.getBytes(), 2, false);
-        } catch (MqttException e) {
-            e.printStackTrace();
+    public static void publish(String topic, String message) {
+        if (client != null) {
+            if (client.isConnected()) {
+                try {
+                    client.publish(topic, message.getBytes(), 2, false);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     private void subscribe(int QoS, String topic) {
-        System.out.println("Subscribing to topic: " + topic);
-        try {
-            client.subscribe(topic, QoS);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-    }
-
-    void reconnectIfNecessary() {
-        DataBaseManager dbManager = new DataBaseManager();
-        SettingsBundle tmpBundle = dbManager.getProfile(dbManager.getSelectedProfile());
-        if (currentSettings != null &&
-                (!tmpBundle.getConnUrl().equals(currentSettings.getConnUrl())
-                        || tmpBundle.getCleanSess() != currentSettings.getCleanSess()
-                        || !tmpBundle.getPort().equals(currentSettings.getPort())
-                        || !tmpBundle.getClientName().equals(currentSettings.getClientName()))) {
-            disconnect();
-            connectClient();
-        } else {
-            this.currentSettings = tmpBundle;
-        }
-    }
-
-    void disconnect() {
-        try {
-            System.out.println("Disconnecting");
-            publish(Constants.MAIN_CLIENT_DISCONNECTING, Constants.MAIN_CLIENT_DISCONNECTING);
-            client.disconnect();
-            DataBaseManager dbManager = new DataBaseManager();
-            dbManager.clearClients();
-        } catch (MqttException e) {
-            e.printStackTrace();
+        if (client != null) {
+            if (client.isConnected()) {
+                publish(Constants.LOG_TOPIC,
+                        "MQTT | Subscribing to topic " + topic);
+                try {
+                    client.subscribe(topic, QoS);
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -110,7 +94,6 @@ public class MqttManager implements MqttCallback {
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
         String[] topicParts = topic.split("/");
-        System.out.println("Message arrived on topic: " + topic + "(" + mqttMessage + ")");
         if (topicParts[0].equals(Constants.CONNECTION_TOPIC)) {
             //Sort operation by topic:
             switch (topicParts[1]) {
@@ -118,15 +101,18 @@ public class MqttManager implements MqttCallback {
                     subscribe(2, Constants.CONNECTED_TOPIC + mqttMessage);
                     publish(Constants.CONNECTED_TOPIC +
                             mqttMessage + Constants.CONNECTED_ACKNOWLEDGE_TOPIC, Constants.MESSAGE_ACKNOWLEDGED);
+                    publish(Constants.LOG_TOPIC,
+                            "MQTT | Got new ID: " + mqttMessage);
                     break;
                 case Constants.CONNECTED_TOPIC_SIMPLE: {
                     String subscribedId = topicParts[2];
                     String message = new String(mqttMessage.getPayload());
                     String[] information = message.split("/");
                     String id = information[Constants.ID];
-                    System.out.println("Got new id: " + id);
+
                     if (!id.equals(subscribedId)) {
-                        System.out.println("ID Mismatch");
+                        publish(Constants.LOG_TOPIC,
+                                "ERROR: MQTT | ID Mismatch");
                         return;
                     }
 
@@ -144,13 +130,18 @@ public class MqttManager implements MqttCallback {
                 }
                 case Constants.REQUEST_ACKNOWLEDGEMENT_TOPIC_SIMPLE: {
                     String id = mqttMessage.toString();
-                    System.out.println("Acknowledgement requested by id: " + id);
+                    publish(Constants.LOG_TOPIC,
+                            "MQTT | Acknowledgement request by ID " + id);
                     publish(Constants.CONNECTED_TOPIC + id + Constants.CONNECTED_ACKNOWLEDGE_TOPIC,
                             Constants.MESSAGE_ACKNOWLEDGED);
                     break;
                 }
             }
         }
+    }
+
+    void updateThresholds(SettingsBundle bundle) {
+        this.currentSettings = bundle;
     }
 
     @Override

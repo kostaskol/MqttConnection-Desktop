@@ -1,9 +1,12 @@
-package HelpfulFunctions;
+package Managers.DTManager;
 
 
 import java.time.LocalDateTime;
 
-public class HelpFunc {
+/**
+ * Manager class that manages simple date and time operations
+ */
+public class DateAndTimeManager {
 
     public static String getDate() {
         LocalDateTime now = LocalDateTime.now();
@@ -21,16 +24,6 @@ public class HelpFunc {
         return hour + ":" + minute + ":" + second;
     }
 
-    public static int[] dateToParts(String date) {
-        String[] dateParts = date.split("-");
-        int[] parts = new int[3];
-
-        for (int i = 0; i < dateParts.length; i++) {
-            parts[i] = Integer.parseInt(dateParts[i]);
-        }
-
-        return parts;
-    }
 
     public static int[] timeToParts(String time) {
         int[] parts = new int[3];

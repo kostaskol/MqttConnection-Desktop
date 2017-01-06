@@ -1,26 +1,29 @@
-package DataBaseManager;
+package Managers.DataBaseManager;
 
 import BundleClasses.*;
-import HelpfulFunctions.HelpFunc;
+import Managers.DTManager.DateAndTimeManager;
+import Managers.MqttManager.MqttManager;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Manager class the manages *all* of the DataBase's operations
+ */
 public class DataBaseManager {
 
 
     private Connection conn;
     private Statement statement;
-    private boolean exists;
 
     public DataBaseManager() {
         try {
             try {
                 Class.forName(Constants.JDBC_DRIVER);
-            } catch (ClassNotFoundException cne) {
-                System.err.println("Class not found");
-                cne.printStackTrace();
+            } catch (ClassNotFoundException cnfe) {
+                MqttManager.publish(Constants.LOG_TOPIC, "ERROR: DBMANAGER | Class not found");
+                cnfe.printStackTrace();
             }
             conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
         } catch(SQLException se) {
@@ -37,16 +40,15 @@ public class DataBaseManager {
      */
     void saveIncident(Incident inc) {
         String sql = "INSERT INTO log " +
-                "VALUES " +
-                "(\"" +
-                inc.getId() + "\", " +
-                inc.getLevelOfDanger() + ", \"" +
-                inc.getLightVal() + "\", \"" +
-                inc.getProxVal() + "\", \"" +
-                inc.getDate() + "\", \"" +
-                inc.getTime() + "\",\"" +
-                inc.getLatitude() + "\", \"" +
-                inc.getLongitude() + "\")";
+                "VALUES (" +
+                inc.getLevelOfDanger() +
+                "\"" + inc.getLightVal() + "\", " +
+                "\"" + inc.getProxVal() + "\", " +
+                "\"" + inc.getDate() + "\", " +
+                "\"" + inc.getTime() + "\", " +
+                "\"" + inc.getLatitude() + "\", " +
+                "\"" + inc.getLongitude() + "\", " +
+                "\"" + inc.getId() + "\")";
 
         executeStatement(sql);
 
@@ -58,12 +60,12 @@ public class DataBaseManager {
      * This is useful for updating to danger later on)
      */
     public IncidentTime getLastIncidentTime() {
-        String today = HelpFunc.getDate();
+        String today = DateAndTimeManager.getDate();
 
         /*
          * This will give us the most recent incident
          */
-        String sql = "SELECT userID, date, time FROM log ORDER BY date DESC, time DESC LIMIT 1";
+        String sql = "SELECT id, date, time FROM log ORDER BY date DESC, time DESC LIMIT 1";
 
         ResultSet rs = executeQuery(sql);
 
@@ -81,8 +83,8 @@ public class DataBaseManager {
                 /*
                  * We return the most recent incident and the involved user's id
                  */
-                tmp = new IncidentTime(HelpFunc.timeToParts(rs.getString("time")),
-                        rs.getString("userID"));
+                tmp = new IncidentTime(DateAndTimeManager.timeToParts(rs.getString("time")),
+                        rs.getString("id"));
             }
 
             rs.close();
@@ -97,8 +99,14 @@ public class DataBaseManager {
     /*
      * Change the danger level of the specific ID to 1 (DANGER_HIGH)
      */
-    void updateDanger(String id) {
-        String sql = "UPDATE log SET levelOfDanger=1 WHERE userID=\"" + id + "\";";
+    void updateDanger(IncidentTime inc) {
+        int incDate[] = inc.getDate();
+        String date = incDate[0] + "-" + incDate[1] + "-" + incDate[2];
+        int incTime[] = inc.getTime();
+        String time = incTime[0] + ":" + incTime[1] + ":" + incTime[2];
+        String sql = "UPDATE log SET levelOfDanger=1 WHERE id=\"" + inc.getId() + "\"" +
+                "AND time=\"" + date + "\"" +
+                "AND date=\"" + time + "\"";
         executeStatement(sql);
     }
 
@@ -107,9 +115,10 @@ public class DataBaseManager {
      * returns the query's results
      */
     public List<Incident> searchDb(String id, String danger, String light, String prox, String date, String time) {
+
         /*
          * We check each of the variables and add them to the
-         * query if necessary
+         * query if the user has supplied a value
          */
         String sql = "SELECT * FROM log ";
 
@@ -117,7 +126,7 @@ public class DataBaseManager {
         if (id != null) {
             if (!id.equals("")) {
                 sql += " WHERE ";
-                sql += " userID=" + id;
+                sql += " id=" + id;
                 numOfVars++;
             }
         }
@@ -158,7 +167,7 @@ public class DataBaseManager {
                         threshold = 500;
                         break;
                 }
-                sql += " lightThreshold > " + threshold;
+                sql += " lightValue > " + threshold;
                 numOfVars++;
             }
         }
@@ -174,7 +183,7 @@ public class DataBaseManager {
                 if (!prox.equals(Constants.PROX_CLOSE)) {
                     threshold = 5;
                 }
-                sql += " proxThreshold > " + threshold;
+                sql += " proxValue >= " + threshold;
                 numOfVars++;
             }
         }
@@ -215,7 +224,8 @@ public class DataBaseManager {
                         interval = 1440;
                         break;
                     default:
-                        System.out.println("Bad value for time");
+                        MqttManager.publish(Constants.LOG_TOPIC,
+                                "WARNING: DBMANAGER | QUERY | Bad value for time");
                         interval = 0;
                         break;
                 }
@@ -223,19 +233,21 @@ public class DataBaseManager {
                 /*
                  * Get all values more recent than interval minutes (for today)
                  */
-                String currDate = HelpFunc.getDate();
+                String currDate = DateAndTimeManager.getDate();
                 sql += " time > date_sub(now(), interval " + interval + " minute) AND date=\"" + currDate + "\"";
             }
         }
         ResultSet rs = executeQuery(sql);
 
-        assert rs != null;
+        if (rs == null) {
+            return null;
+        }
 
         List<Incident> results = new ArrayList<>();
         try {
             while(rs.next()) {
 
-                String userId = rs.getString("userID");
+                String userId = rs.getString("id");
                 int levelOfDanger = rs.getInt("levelOfDanger");
                 String lightVal = rs.getString("lightValue");
                 String proxVal = rs.getString("proxValue");
@@ -283,7 +295,7 @@ public class DataBaseManager {
     }
 
     public int getMaxProfileId() {
-        String sql = "SELECT id FROM settings ORDER BY id DESC";
+        String sql = "SELECT profileID FROM settings ORDER BY profileID DESC";
         ResultSet rs = executeQuery(sql);
 
         assert rs != null;
@@ -291,7 +303,7 @@ public class DataBaseManager {
         try {
             int maxId = -1;
             if (rs.next()) {
-                maxId = rs.getInt("id");
+                maxId = rs.getInt("profileID");
             }
             return maxId;
         } catch (SQLException oe) {
@@ -318,7 +330,7 @@ public class DataBaseManager {
      */
     public void switchProfile(int newId) {
         int oldId = getSelectedProfile();
-        String sql = "UPDATE settingsProfile SET currId=" + newId + " WHERE currId=" + oldId;
+        String sql = "UPDATE settingsProfile SET currId=" + newId;
         executeStatement(sql);
     }
 
@@ -326,21 +338,21 @@ public class DataBaseManager {
      * Update profile
      */
     void updateProfile(SettingsBundle bundle) {
-        String sql = "UPDATE settings SET connUrl=\"" + bundle.getConnUrl() +
+        String sql = "UPDATE settings SET " +
+                "connUrl=\"" + bundle.getConnUrl() +
                 "\", clientName=\"" + bundle.getClientName() +
                 "\", cleanSession=" + bundle.getCleanSess() +
                 ", lightThreshold=" + bundle.getLightThres() +
                 ", proxThreshold=" + bundle.getProxThres() +
                 ", profileName=\"" + bundle.getProfName() +
                 "\", port=\"" + bundle.getPort() +
-                "\" WHERE id=" + bundle.getProfId();
-        System.out.println("Executing statement: " + sql);
+                "\" WHERE profileID=" + bundle.getProfId();
         executeStatement(sql);
         switchProfile(bundle.getProfId());
     }
 
     public void deleteProfile(Profile prof) {
-        String sql = "DELETE FROM settings WHERE id=" + prof.getProfileId();
+        String sql = "DELETE FROM settings WHERE profileID=" + prof.getProfileId();
         executeStatement(sql);
         changeProfile(0, prof.getProfileId());
     }
@@ -349,21 +361,21 @@ public class DataBaseManager {
      * Create new profile
      */
     void saveNewProfile(SettingsBundle bundle) {
-        String sql = "INSERT INTO settings VALUES (\"" +
-                bundle.getConnUrl() + "\", \"" +
-                bundle.getClientName() + "\", " +
+        String sql = "INSERT INTO settings VALUES (" +
+                "\"" + bundle.getConnUrl() + "\", " +
+                "\"" + bundle.getClientName() + "\", " +
                 bundle.getCleanSess() + ", " +
                 bundle.getLightThres() + ", " +
                 bundle.getProxThres() + ", " +
-                bundle.getProfId() + ", \"" +
-                bundle.getProfName() + "\", \"" +
-                bundle.getPort() + "\")";
+                "\"" + bundle.getProfName() + "\", " +
+                "\"" + bundle.getPort() + "\", " +
+                bundle.getProfId() + ")";
         executeStatement(sql);
         changeProfile(bundle.getProfId(), getSelectedProfile());
     }
 
     public SettingsBundle getProfile(int selectedProfile) {
-        String sql = "SELECT * FROM settings WHERE id=" + selectedProfile;
+        String sql = "SELECT * FROM settings WHERE profileID=" + selectedProfile;
         ResultSet rs = executeQuery(sql);
         assert rs != null;
         try {
@@ -377,8 +389,7 @@ public class DataBaseManager {
                 int proxThres = rs.getInt("proxThreshold");
                 String profileName = rs.getString("profileName");
                 settings = new SettingsBundle(
-                        connUrl, port, clientName, cleanSess, lightThres, proxThres, selectedProfile, profileName
-                );
+                        connUrl, port, clientName, cleanSess, lightThres, proxThres, selectedProfile, profileName);
             }
             rs.close();
             return settings;
@@ -410,7 +421,7 @@ public class DataBaseManager {
                 boolean cleanSess = rs.getInt("cleanSession") == 1;
                 int lightThres = rs.getInt("lightThreshold");
                 int proxThres = rs.getInt("proxThreshold");
-                int id = rs.getInt("id");
+                int id = rs.getInt("profileID");
                 String profileName = rs.getString("profileName");
 
                 SettingsBundle tmpBundle = new SettingsBundle(
@@ -481,10 +492,10 @@ public class DataBaseManager {
         int ring = client.isRinging() ? 1 : 0;
         String sql = "INSERT INTO clientAverages " +
                 "VALUES (\"" +
-                id + "\", " +
+                "\"" + id + "\", " +
                 avg + ", " +
+                times + ", " +
                 sum + ", " +
-                times + "," +
                 ring + ");";
 
         executeStatement(sql);
@@ -504,7 +515,6 @@ public class DataBaseManager {
                 "times=" + times + ", " +
                 "currentlyRinging=" + ringing +
                 " WHERE id=\"" + id + "\"";
-        System.out.println("Executing query: " + sql);
         executeStatement(sql);
     }
 
@@ -522,7 +532,6 @@ public class DataBaseManager {
             statement.execute(sql);
 
             statement.close();
-            this.exists = false;
         } catch (SQLException oe) {
             try {
                 statement.close();

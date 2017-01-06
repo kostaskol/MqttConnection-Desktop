@@ -1,5 +1,9 @@
 package BundleClasses;
 
+
+/**
+ * Bundle class to store query results for table "clientAverages".
+ */
 public class ClientAverage {
     private String clientId;
     private float lightAverage;

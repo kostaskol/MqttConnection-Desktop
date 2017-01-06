@@ -6,6 +6,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Bundle class to store query results for table "log".
+ * Member variables are of type xProperty.
+ * Required by the TableFactory used in Windows$SearchResultsWindow
+ */
 public class Incident {
     private StringProperty id;
     private IntegerProperty levelOfDanger;
@@ -28,6 +33,10 @@ public class Incident {
         this.time = new SimpleStringProperty(time);
     }
 
+    /*
+     * Class objects are immutable, so the class
+     * only supports getter functions (both xProperty and simple)
+     */
     public String getId() {
         return this.id.get();
     }
@@ -35,6 +44,7 @@ public class Incident {
     public StringProperty getIdProperty() {
         return this.id;
     }
+
 
     public int getLevelOfDanger() {
         return this.levelOfDanger.get();
@@ -44,6 +54,7 @@ public class Incident {
         return this.levelOfDanger;
     }
 
+
     public String getLightVal() {
         return this.lightVal.get();
     }
@@ -51,6 +62,7 @@ public class Incident {
     public StringProperty getLightValProperty() {
         return this.lightVal;
     }
+
 
     public String getProxVal() {
         return this.proxVal.get();
@@ -60,6 +72,7 @@ public class Incident {
         return this.proxVal;
     }
 
+
     public String getLatitude() {
         return this.latitude.get();
     }
@@ -67,6 +80,7 @@ public class Incident {
     public StringProperty getLatitudeProperty() {
         return this.latitude;
     }
+
 
     public String getLongitude() {
         return this.longitude.get();
@@ -76,6 +90,7 @@ public class Incident {
         return this.longitude;
     }
 
+
     public String getDate() {
         return this.date.get();
     }
@@ -83,6 +98,7 @@ public class Incident {
     public StringProperty getDateProperty() {
         return this.date;
     }
+
 
     public String getTime() {
         return this.time.get();
