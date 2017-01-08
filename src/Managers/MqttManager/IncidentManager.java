@@ -9,7 +9,7 @@ import Managers.DataBaseManager.DataBaseManagerThread;
  * Class that checks the given values, publishes different levels of warnings
  * and saves incidents as needed
  */
-public class CheckPublishAndSaveThread extends Thread {
+public class IncidentManager extends Thread {
     private String id;
     private String lightVal;
     private String proxVal;
@@ -18,18 +18,20 @@ public class CheckPublishAndSaveThread extends Thread {
     private SettingsBundle bundle;
     private IncidentTime otherIncTime;
 
-    public CheckPublishAndSaveThread() {
+    public IncidentManager() {
     }
 
-    CheckPublishAndSaveThread(String threadName, String id, String lightVal, String proxVal,
-                              String latitude, String longitude, SettingsBundle bundle) {
+    IncidentManager(String threadName, String id, String lightVal, String proxVal,
+                    String latitude, String longitude, SettingsBundle bundle) {
         super(threadName);
+
         this.id = id;
         this.lightVal = lightVal;
         this.proxVal = proxVal;
         this.latitude = latitude;
         this.longitude = longitude;
         this.bundle = bundle;
+
     }
 
     @Override
@@ -46,19 +48,29 @@ public class CheckPublishAndSaveThread extends Thread {
             String time = DateAndTimeManager.getTime();
             DataBaseManager dbManager = new DataBaseManager();
             ClientAverage client = dbManager.getClientAverage(id);
+            dbManager.closeConnection();
             boolean isRinging = client.isRinging();
 
 
             if (!checkIncidentTime()) {
                 if (!isRinging) {
-
+                    client.setIsRinging(true);
+                    DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
+                            "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
+                    dbManagerThread.start();
+                    try {
+                        dbManagerThread.join();
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                        return;
+                    }
                     /*
                     * If the most recent incident did not happen within the same second
                     * as this one *and* the client is not already in a state of warning/danger
                     */
                     Incident inc = new Incident(this.id, 0, this.lightVal, this.proxVal
                             , this.latitude, this.longitude, date, time);
-                    DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
+                    dbManagerThread = new DataBaseManagerThread(
                             "SAVE INCIDENT", Constants.SAVE_INCIDENT, inc);
                     dbManagerThread.start();
 
@@ -79,7 +91,9 @@ public class CheckPublishAndSaveThread extends Thread {
                         , this.latitude, this.longitude, date, time);
                 DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
                         "SAVE INCIDENT", Constants.SAVE_INCIDENT, inc);
-                dbManagerThread.run();
+                dbManagerThread.start();
+                System.out.println("Notifying current user's ID");
+
                 MqttManager.publish(
                         Constants.CONNECTED_TOPIC + id + Constants.TOPIC_DANGER,
                         Constants.MESSAGE_DANGER);
@@ -91,6 +105,7 @@ public class CheckPublishAndSaveThread extends Thread {
                 dbManagerThread = new DataBaseManagerThread(
                         "SWITCH LoD", Constants.UPDATE_DANGER, this.otherIncTime);
                 dbManagerThread.start();
+                System.out.println("Notifying other user's ID");
                 MqttManager.publish(
                         Constants.CONNECTED_TOPIC + otherIncTime.getId() + Constants.TOPIC_DANGER,
                         Constants.MESSAGE_DANGER);
@@ -109,6 +124,7 @@ public class CheckPublishAndSaveThread extends Thread {
              */
             DataBaseManager dbManager = new DataBaseManager();
             ClientAverage client = dbManager.getClientAverage(id);
+            dbManager.closeConnection();
             client.setIsRinging(false);
             DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
                     "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
@@ -122,20 +138,32 @@ public class CheckPublishAndSaveThread extends Thread {
     private String checkValueLight() {
         int lightThres = bundle.getLightThres();
 
-        float lightVal = Float.valueOf(this.lightVal);
+        if (this.lightVal.equals("null")) {
+            return Constants.MESSAGE_NO_WARNING;
+        }
+        float lightValF = Float.valueOf(this.lightVal);
 
         DataBaseManager dbManager = new DataBaseManager();
         ClientAverage client = dbManager.getClientAverage(id);
         dbManager.closeConnection();
-
+        if (client == null) {
+            return Constants.MESSAGE_NO_WARNING;
+        }
+        dbManager.closeConnection();
         if (client.getTimes() < Constants.AVERAGE_TIMES) {
             client.setTimes(client.getTimes() + 1);
-            client.setLightSum(client.getLightSum() + lightVal);
+            client.setLightSum(client.getLightSum() + lightValF);
             DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
                     "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
             dbManagerThread.start();
+            try {
+                dbManagerThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             return Constants.MESSAGE_NO_WARNING;
         } else {
+
             float average;
             if (client.getLightAverage() == 0) {
                 /*
@@ -154,8 +182,9 @@ public class CheckPublishAndSaveThread extends Thread {
                  */
                 average = client.getLightAverage();
             }
-            float floor = average * lightThres / 100;
-            if (lightVal > average + floor) {
+            float floorAvg = (100f - lightThres) / 100f;
+            float floor = average * floorAvg;
+            if (lightValF > average + floor) {
                 /*
                  * This client is not as "smart" as the android client
                  * in the sense that, if the current light sensor value
@@ -171,7 +200,7 @@ public class CheckPublishAndSaveThread extends Thread {
                         "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
                 dbManagerThread.start();
                 return Constants.MESSAGE_STOP_WARNING;
-            } else if (lightVal <= average - floor) {
+            } else if (lightValF <= average - floor) {
                 /*
                  * If, at any point, the light sensor value
                  * falls beneath average - floor, we send
@@ -179,10 +208,6 @@ public class CheckPublishAndSaveThread extends Thread {
                  * (the run function checks whether it should send
                  * out a warning or danger signal)
                  */
-                client.setIsRinging(true);
-                DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
-                        "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
-                dbManagerThread.start();
                 return Constants.MESSAGE_WARNING;
             } else {
                 /*
@@ -206,6 +231,7 @@ public class CheckPublishAndSaveThread extends Thread {
         if (proxVal <= proxThres) {
             DataBaseManager dbManager = new DataBaseManager();
             ClientAverage client = dbManager.getClientAverage(id);
+            dbManager.closeConnection();
             client.setIsRinging(true);
             DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
                     "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
@@ -230,6 +256,9 @@ public class CheckPublishAndSaveThread extends Thread {
     }
 
     private boolean checkIncidentTime() {
+        MqttManager.publish(Constants.LOG_TOPIC,
+                "MQTT | Checking incident time");
+
         /*
          * Get the last incident's time and check it against the current time
          * If both incidents occurred within the same hour, minute and second,
@@ -248,6 +277,8 @@ public class CheckPublishAndSaveThread extends Thread {
         dbManager.closeConnection();
 
         if (lastIncidentTime == null) {
+            MqttManager.publish(Constants.LOG_TOPIC,
+                    "MQTT | Last Incident is null");
             return false;
         }
 
@@ -256,11 +287,18 @@ public class CheckPublishAndSaveThread extends Thread {
          * warning, we return false
          */
         if (this.id.equals(lastIncidentTime.getId())) {
+            MqttManager.publish(Constants.LOG_TOPIC,
+                    "MQTT | Checking incident time");
             return false;
         }
 
+        timeString = lastIncidentTime.getTime()[0] + ":" +
+                lastIncidentTime.getTime()[1] + ":" + lastIncidentTime.getTime()[2];
+        MqttManager.publish(Constants.LOG_TOPIC,
+                "MQTT | Last Incident's time is: " + timeString);
         int[] time = lastIncidentTime.getTime();
 
+        timeString = time[0] + ":" + time[1] + ":" + time[2];
         boolean sameHour = currentTime[0] == time[0];
         if (!sameHour) {
             return false;

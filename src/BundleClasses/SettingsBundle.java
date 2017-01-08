@@ -11,9 +11,10 @@ public class SettingsBundle {
     private int lightThres;
     private int proxThres;
     private int profId;
+    private int checkFrequency;
     private String profName;
 
-    public SettingsBundle(String url, String port, String name, boolean sess, int light, int prox, int id, String profName) {
+    public SettingsBundle(String url, String port, String name, boolean sess, int light, int prox, int id, String profName, int frequency) {
         this.connUrl = url;
         this.port = port;
         this.clientName = name;
@@ -22,37 +23,42 @@ public class SettingsBundle {
         this.proxThres = prox;
         this.profId = id;
         this.profName = profName;
+        this.checkFrequency = frequency;
     }
 
     public String getConnUrl() {
-        return connUrl;
+        return this.connUrl;
     }
 
     public String getPort() {
-        return port;
+        return this.port;
     }
 
     public String getClientName() {
-        return clientName;
+        return this.clientName;
     }
 
     public boolean getCleanSess() {
-        return cleanSess;
+        return this.cleanSess;
     }
 
     public int getLightThres() {
-        return lightThres;
+        return this.lightThres;
     }
 
     public int getProxThres() {
-        return proxThres;
+        return this.proxThres;
     }
 
     public int getProfId() {
-        return profId;
+        return this.profId;
     }
 
     public String getProfName() {
-        return profName;
+        return this.profName;
+    }
+
+    public int getFrequency() {
+        return this.checkFrequency;
     }
 }

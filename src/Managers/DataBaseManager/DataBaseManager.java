@@ -41,7 +41,7 @@ public class DataBaseManager {
     void saveIncident(Incident inc) {
         String sql = "INSERT INTO log " +
                 "VALUES (" +
-                inc.getLevelOfDanger() +
+                inc.getLevelOfDanger() + ", " +
                 "\"" + inc.getLightVal() + "\", " +
                 "\"" + inc.getProxVal() + "\", " +
                 "\"" + inc.getDate() + "\", " +
@@ -49,7 +49,6 @@ public class DataBaseManager {
                 "\"" + inc.getLatitude() + "\", " +
                 "\"" + inc.getLongitude() + "\", " +
                 "\"" + inc.getId() + "\")";
-
         executeStatement(sql);
 
     }
@@ -61,7 +60,7 @@ public class DataBaseManager {
      */
     public IncidentTime getLastIncidentTime() {
         String today = DateAndTimeManager.getDate();
-
+        int[] todayParts = DateAndTimeManager.dateToParts(today);
         /*
          * This will give us the most recent incident
          */
@@ -77,8 +76,14 @@ public class DataBaseManager {
                 /*
                  * If the most recent incident did not happen today, we return null
                  */
-                if (!today.equals(rs.getString("date"))) {
-                    return null;
+                String date = rs.getString("date");
+
+                int[] dateParts = DateAndTimeManager.dateToParts(date);
+                for (int i = 0; i < 3; i++) {
+                    if (dateParts[i] != todayParts[i]) {
+                        System.out.println(dateParts[i] + " not " + todayParts[i]);
+                        return null;
+                    }
                 }
                 /*
                  * We return the most recent incident and the involved user's id
@@ -194,7 +199,7 @@ public class DataBaseManager {
             } else {
                 sql += " WHERE ";
             }
-            sql += " date = " + date;
+            sql += " date = \"" + date + "\"";
             numOfVars++;
         }
 
@@ -346,7 +351,9 @@ public class DataBaseManager {
                 ", proxThreshold=" + bundle.getProxThres() +
                 ", profileName=\"" + bundle.getProfName() +
                 "\", port=\"" + bundle.getPort() +
-                "\" WHERE profileID=" + bundle.getProfId();
+                "\", frequency=" + bundle.getFrequency() +
+                " WHERE profileID=" + bundle.getProfId();
+        System.out.println("Executing query " + sql);
         executeStatement(sql);
         switchProfile(bundle.getProfId());
     }
@@ -369,7 +376,8 @@ public class DataBaseManager {
                 bundle.getProxThres() + ", " +
                 "\"" + bundle.getProfName() + "\", " +
                 "\"" + bundle.getPort() + "\", " +
-                bundle.getProfId() + ")";
+                bundle.getProfId() + ", " +
+                bundle.getFrequency() + ")";
         executeStatement(sql);
         changeProfile(bundle.getProfId(), getSelectedProfile());
     }
@@ -388,8 +396,9 @@ public class DataBaseManager {
                 int lightThres = rs.getInt("lightThreshold");
                 int proxThres = rs.getInt("proxThreshold");
                 String profileName = rs.getString("profileName");
+                int freq = rs.getInt("frequency");
                 settings = new SettingsBundle(
-                        connUrl, port, clientName, cleanSess, lightThres, proxThres, selectedProfile, profileName);
+                        connUrl, port, clientName, cleanSess, lightThres, proxThres, selectedProfile, profileName, freq);
             }
             rs.close();
             return settings;
@@ -423,10 +432,10 @@ public class DataBaseManager {
                 int proxThres = rs.getInt("proxThreshold");
                 int id = rs.getInt("profileID");
                 String profileName = rs.getString("profileName");
+                int freq = rs.getInt("frequency");
 
                 SettingsBundle tmpBundle = new SettingsBundle(
-                        connUrl, port, clientName, cleanSess, lightThres, proxThres, id, profileName
-                );
+                        connUrl, port, clientName, cleanSess, lightThres, proxThres, id, profileName, freq);
 
                 bundle.add(tmpBundle);
             }
@@ -453,7 +462,9 @@ public class DataBaseManager {
          */
         String sql = "SELECT * FROM clientAverages WHERE id=\"" + clientId + "\"";
         ResultSet rs = executeQuery(sql);
-        assert rs != null;
+        if (rs == null) {
+            return null;
+        }
         try {
             ClientAverage client = null;
             if (rs.next()) {
@@ -478,7 +489,7 @@ public class DataBaseManager {
                 insertClientAverage(client);
                 return client;
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
             return null;
         }
@@ -491,13 +502,12 @@ public class DataBaseManager {
         int times = client.getTimes();
         int ring = client.isRinging() ? 1 : 0;
         String sql = "INSERT INTO clientAverages " +
-                "VALUES (\"" +
+                "VALUES (" +
                 "\"" + id + "\", " +
                 avg + ", " +
                 times + ", " +
                 sum + ", " +
-                ring + ");";
-
+                ring + ")";
         executeStatement(sql);
     }
 
@@ -546,10 +556,13 @@ public class DataBaseManager {
      */
     private ResultSet executeQuery(String sql) {
         try {
+            if (conn == null) {
+                return null;
+            }
             statement = conn.createStatement();
             return statement.executeQuery(sql);
 
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
             try {
                 statement.close();

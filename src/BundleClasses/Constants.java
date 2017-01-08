@@ -91,7 +91,6 @@ public class Constants {
     public static final String MESSAGE_DANGER = "danger";
     public static final String MESSAGE_NO_WARNING = "no warning";
     public static final String MESSAGE_STOP_WARNING = "stop warning";
-    public static final String MESSAGE_ACKNOWLEDGED = "acknowledged id";
 
     public static final int AVERAGE_TIMES = 5;
 

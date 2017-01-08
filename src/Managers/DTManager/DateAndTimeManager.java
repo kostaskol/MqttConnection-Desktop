@@ -13,7 +13,13 @@ public class DateAndTimeManager {
         int year = now.getYear();
         int month = now.getMonthValue();
         int day = now.getDayOfMonth();
-        return year + "-" + month + "-" + day;
+        String date;
+        if (day < 10) {
+            date = year + "-" + month + "-0" + day;
+        } else {
+            date = year + "-" + month + "-" + day;
+        }
+        return date;
     }
 
     public static String getTime() {
@@ -22,6 +28,15 @@ public class DateAndTimeManager {
         int minute = now.getMinute();
         int second = now.getSecond();
         return hour + ":" + minute + ":" + second;
+    }
+
+    public static int[] dateToParts(String date) {
+        int[] parts = new int[3];
+        String[] dateParts = date.split("-");
+        for (int i = 0; i < 3; i++) {
+            parts[i] = Integer.parseInt(dateParts[i]);
+        }
+        return parts;
     }
 
 

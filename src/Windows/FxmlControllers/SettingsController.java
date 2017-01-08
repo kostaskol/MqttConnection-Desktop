@@ -40,6 +40,8 @@ public class SettingsController implements Initializable {
     private ComboBox<String> profile;
     @FXML
     private TextField portText;
+    @FXML
+    private TextField frequencyText;
 
     private Profile selectedProfile;
     private List<SettingsBundle> profiles = null;
@@ -56,6 +58,7 @@ public class SettingsController implements Initializable {
          */
         lightThresText.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
         proxThresText.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
+        frequencyText.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
 
         /*
          * Get the selected profile's settings
@@ -109,6 +112,7 @@ public class SettingsController implements Initializable {
         boolean cleanSess = cleanSessCheck.isSelected();
         int lightThres;
         int proxThres;
+        int frequency;
 
         /*
          * If the user didn't enter a light or proximity threshold,
@@ -117,16 +121,20 @@ public class SettingsController implements Initializable {
         try {
             lightThres = Integer.parseInt(lightThresText.getText());
             proxThres = Integer.parseInt(proxThresText.getText());
+            frequency = Integer.parseInt(frequencyText.getText());
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Bad Values");
             alert.setHeaderText("You have inserted some bad values\n" +
-                    "for the light or proximity threshold fields.");
+                    "for the light or proximity threshold or the frequency fields.");
             alert.show();
             return null;
         }
 
-
+        /*
+         * We want the frequency in terms of ms
+         */
+        frequency *= 1000;
         if (connUrl.equals("") || clientName.equals("") || port.equals("")) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Empty fields");
@@ -163,6 +171,22 @@ public class SettingsController implements Initializable {
              * We only proceed with saving the values
              * if the user has clicked the OK button
              */
+            if (result.isPresent()) {
+                if (result.get() == ButtonType.CANCEL) {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
+
+        if (frequency > 5) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Warning!");
+            alert.setHeaderText("The frequency you have selected is too sparse. \nUsers " +
+                    "will not be very safe. \nConsider setting the frequency to once every second or" +
+                    " below. \nDo you want to continue with the current frequency value?");
+            Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent()) {
                 if (result.get() == ButtonType.CANCEL) {
                     return null;
@@ -221,7 +245,7 @@ public class SettingsController implements Initializable {
             DataBaseManager dbManager = new DataBaseManager();
             SettingsBundle bundle = new SettingsBundle(
                     connUrl, port, clientName, cleanSess, lightThres, proxThres,
-                    dbManager.getMaxProfileId() + 1, profName);
+                    dbManager.getMaxProfileId() + 1, profName, frequency);
 
             DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
                     "SAVE NEW PROFILE", Constants.SAVE_NEW_PROFILE, bundle);
@@ -255,7 +279,7 @@ public class SettingsController implements Initializable {
                         "the next time you start the main client");
                 alert.show();
             }
-            return updateProfile(connUrl, port, clientName, cleanSess, lightThres, proxThres);
+            return updateProfile(connUrl, port, clientName, cleanSess, lightThres, proxThres, frequency);
         }
     }
 
@@ -264,11 +288,11 @@ public class SettingsController implements Initializable {
      * Updates the selected profile
      */
     private SettingsBundle updateProfile(String connUrl, String port, String clientName, boolean cleanSess,
-                                         int lightThres, int proxThres) {
+                                         int lightThres, int proxThres, int freq) {
         int currId = selectedProfile.getProfileId();
         String profName = selectedProfile.getProfileName();
         SettingsBundle bundle = new SettingsBundle(
-                connUrl, port, clientName, cleanSess, lightThres, proxThres, currId, profName);
+                connUrl, port, clientName, cleanSess, lightThres, proxThres, currId, profName, freq);
 
         DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
                 "UPDATE PROFILE", Constants.UPDATE_PROFILE, bundle);
@@ -338,24 +362,27 @@ public class SettingsController implements Initializable {
             if (profiles != null) {
                 String profileName = profile.getSelectionModel().getSelectedItem();
                 for (SettingsBundle tmpProfile : profiles) {
-                    if (profileName.equals(tmpProfile.getProfName())) {
-                        connUrlText.setText(tmpProfile.getConnUrl());
-                        startingUrl = tmpProfile.getConnUrl();
-                        portText.setText(tmpProfile.getPort());
-                        startingPort = tmpProfile.getPort();
-                        clientNameText.setText(tmpProfile.getClientName());
-                        startingClientName = tmpProfile.getClientName();
-                        cleanSessCheck.setSelected(tmpProfile.getCleanSess());
-                        startingCleanSess = tmpProfile.getCleanSess();
-                        lightThresText.setText(String.valueOf(tmpProfile.getLightThres()));
-                        proxThresText.setText(String.valueOf(tmpProfile.getProxThres()));
+                    if (tmpProfile.getProfName() != null) {
+                        if (profileName.equals(tmpProfile.getProfName())) {
+                            connUrlText.setText(tmpProfile.getConnUrl());
+                            startingUrl = tmpProfile.getConnUrl();
+                            portText.setText(tmpProfile.getPort());
+                            startingPort = tmpProfile.getPort();
+                            clientNameText.setText(tmpProfile.getClientName());
+                            startingClientName = tmpProfile.getClientName();
+                            cleanSessCheck.setSelected(tmpProfile.getCleanSess());
+                            startingCleanSess = tmpProfile.getCleanSess();
+                            lightThresText.setText(String.valueOf(tmpProfile.getLightThres()));
+                            proxThresText.setText(String.valueOf(tmpProfile.getProxThres()));
+                            frequencyText.setText(String.valueOf(tmpProfile.getFrequency()));
                         /*
                          * Update the chosen profile in the data base
                          */
-                        DataBaseManager dbManager = new DataBaseManager();
-                        dbManager.switchProfile(tmpProfile.getProfId());
-                        selectedProfile = new Profile(tmpProfile.getProfId(),
-                                tmpProfile.getProfName());
+                            DataBaseManager dbManager = new DataBaseManager();
+                            dbManager.switchProfile(tmpProfile.getProfId());
+                            selectedProfile = new Profile(tmpProfile.getProfId(),
+                                    tmpProfile.getProfName());
+                        }
                     }
                 }
             }

@@ -93,14 +93,14 @@ public class MqttManager implements MqttCallback {
 
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+        publish(Constants.LOG_TOPIC, "Got new message: " + mqttMessage.toString() +
+                " @ " + topic);
         String[] topicParts = topic.split("/");
         if (topicParts[0].equals(Constants.CONNECTION_TOPIC)) {
             //Sort operation by topic:
             switch (topicParts[1]) {
                 case Constants.NEW_CONNECTION_TOPIC_SIMPLE:
                     subscribe(2, Constants.CONNECTED_TOPIC + mqttMessage);
-                    publish(Constants.CONNECTED_TOPIC +
-                            mqttMessage + Constants.CONNECTED_ACKNOWLEDGE_TOPIC, Constants.MESSAGE_ACKNOWLEDGED);
                     publish(Constants.LOG_TOPIC,
                             "MQTT | Got new ID: " + mqttMessage);
                     break;
@@ -121,7 +121,7 @@ public class MqttManager implements MqttCallback {
                     String lightVal = information[Constants.LIGHT];
                     String proxVal = information[Constants.PROX];
 
-                    CheckPublishAndSaveThread checkAndPublish = new CheckPublishAndSaveThread(
+                    IncidentManager checkAndPublish = new IncidentManager(
                             "Check and publish", id, lightVal, proxVal,
                             latitude, longitude, currentSettings);
 
@@ -130,10 +130,15 @@ public class MqttManager implements MqttCallback {
                 }
                 case Constants.REQUEST_ACKNOWLEDGEMENT_TOPIC_SIMPLE: {
                     String id = mqttMessage.toString();
+                    /*
+                     * Whenever a client requests an acknowledge response,
+                     * we supply them with the frequency with which they should
+                     * send the data
+                     */
                     publish(Constants.LOG_TOPIC,
                             "MQTT | Acknowledgement request by ID " + id);
                     publish(Constants.CONNECTED_TOPIC + id + Constants.CONNECTED_ACKNOWLEDGE_TOPIC,
-                            Constants.MESSAGE_ACKNOWLEDGED);
+                            String.valueOf(currentSettings.getFrequency()));
                     break;
                 }
             }

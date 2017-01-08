@@ -39,13 +39,15 @@ public class SearchController {
         String date = null;
 
         if (localDate != null) {
-            date = localDate.getYear() + "/" + localDate.getMonthValue() + "/" +
+            date = localDate.getYear() + "-" + localDate.getMonthValue() + "-" +
                     localDate.getDayOfMonth();
         }
 
         String time = timeCombo.getSelectionModel().getSelectedItem();
-
-        if (localDate != null && !time.equals(Constants.NONE)) {
+        if (time == null) {
+            time = Constants.NONE;
+        }
+        if (date != null && !time.equals(Constants.NONE) && !time.equals("null")) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Incorrect field values");
             alert.setHeaderText("You cannot search by both date AND time");
