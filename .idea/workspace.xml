@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Added frequency controlling functionality">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Managers/DTManager/DateAndTimeManager.java" afterPath="$PROJECT_DIR$/src/Utilities/DateAndTimeUtility.java" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Created README.md (additions required)">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/BundleClasses/Constants.java" afterPath="$PROJECT_DIR$/src/BundleClasses/Constants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Managers/DataBaseManager/DataBaseManager.java" afterPath="$PROJECT_DIR$/src/Managers/DataBaseManager/DataBaseManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Managers/MqttManager/IncidentManager.java" afterPath="$PROJECT_DIR$/src/Managers/MqttManager/IncidentManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Managers/MqttManager/MqttManager.java" afterPath="$PROJECT_DIR$/src/Managers/MqttManager/MqttManager.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -151,8 +146,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="330">
-                <caret line="51" column="12" lean-forward="false" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
+              <first_editor relative-caret-position="816">
+                <caret line="149" column="7" lean-forward="false" selection-start-line="149" selection-start-column="7" selection-end-line="149" selection-end-column="7" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -1238,7 +1233,7 @@
       <workItem from="1483876422605" duration="1119000" />
       <workItem from="1483887960860" duration="2920000" />
       <workItem from="1484301718117" duration="7268000" />
-      <workItem from="1484327459034" duration="13064000" />
+      <workItem from="1484327459034" duration="15278000" />
     </task>
     <task id="LOCAL-00001" summary="Is this being uploded to gitlab?&#10;">
       <created>1482484833688</created>
@@ -1296,11 +1291,18 @@
       <option name="project" value="LOCAL" />
       <updated>1483908564343</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Created README.md (additions required)">
+      <created>1484342795386</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1484342795386</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="209628000" />
+    <option name="totallyTimeSpent" value="211842000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1376,7 +1378,8 @@
     <MESSAGE value="Some minor changes and bugfixes" />
     <MESSAGE value="Added Comments and organised packages a bit better" />
     <MESSAGE value="Added frequency controlling functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added frequency controlling functionality" />
+    <MESSAGE value="Created README.md (additions required)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created README.md (additions required)" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
@@ -1901,8 +1904,8 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="330">
-            <caret line="51" column="12" lean-forward="false" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
+          <first_editor relative-caret-position="816">
+            <caret line="149" column="7" lean-forward="false" selection-start-line="149" selection-start-column="7" selection-end-line="149" selection-end-column="7" />
             <folding />
           </first_editor>
           <second_editor />

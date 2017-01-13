@@ -84,323 +84,67 @@
             |SettingsController   |Windows         |Controller    |FXML Controller for the Settings tab
             |Window               |Windows         |Window        |The main application window
             |WindowThread         |Windows         |Thread        |Starts the Main application window inside a thread
-            
         + A short description for each of the class's methods:
-            + Main:
-                + void main (String[]): <br />
-                    + Starts the application's two main threads (WindowThread, MqttManagerThread)
-                + void updateThresholds(SettingsBundle): <br />
-                    + Notifies the MqttManager that the user changed the thresholds
-                    in the Settings tab
-                + void close(): <br />
-                    + Only called by Windows$Window.stop(). Interrupts the threads 
-                    and closes the application
             
-            + WindowThread:
-                + @Override void run(): </br>
-                    + Starts Window inside a thread
-            
-            + Window:
-                + void launchWindow(): </br>
-                    + Launches the main FXML window
-                + @Override void start(Stage): </br>
-                    + Sets the stage according to the main_screen.fxml file
-            
-            + SearchController:
-                + void search(): </br>
-                    + Reads the values given by the user and queries the DataBase
-                    accordingly
-            
-            + SettingsController:
-                + @Override void initialise(URL, ResourceBundle): </br>
-                    + Initialises the profile ComboBox with values from the 
-                    database and fills in the settings according to the last
-                    chosen profile by the user
-                
-                + SettingsBundle save(): </br>
-                    + If the user is updating an existing profile:
-                        + Checks for input errors and updates the Data Base
-                    
-                    + If the user is creating a new profile:
-                        + Checks for input errors and inserts the new data
-                        into the Data Base
-                    + Returns the newly saved data (useful for apply)
-        
-                + SettingsBundle updateProfile((unwrapped) SettingsBundle): </br>
-                    + Called by SettingsController.save 
-                    when a profile is updated. 
-                    + Updates the ComboBox
-                    and the Data Base with the given data
-                
-                + void updateProfilesCombo():
-                    + Updates the profile combo with any 
-                    new additions to the profiles list
-                
-                + void deleteProfile():
-                    + Deletes the currently selected profile
-                    from the combo box and the database
-                    (The default profile cannot be deleted)
-                    
-                + void handleComboBoxAction():
-                    + Updates the TextFields whenever a new item
-                    is chosen in the ComboBox
-                
-                + void apply():
-                    + Saves the user's settings and notifies 
-                    the MQTT client (through Main) of the change
-                    
-            + SearchResultsWindow:
-                + TableView<Incident> createTable():
-                    + Initialises a table view with the
-                    contents of the incident list
-                    + Node createPage(pageIndex):
-                        + Creates the pagination of the
-                        current TableView (does not work very well)
-                    
-                    + void showWindow():
-                        + Opens the Search Results window
-            
-            + DateAndTimeUtility:
-                + String getDate():
-                    + Returns the current date
-                + String getTime():
-                    + Returns the current time
-                    
-                + int[] dateToParts(String):
-                    + Splits the given date string
-                    into 3 parts (yyyy-mm-dd)
-                
-                + int[] timeToParts(String):
-                    + Splits the given time string
-                    into 3 parts (hh:mm:ss)
-                    
-            + MqttManagerThread:
-                + @Override void run():
-                    + Creates a new MqttManager object
-                    and starts it
-                + void updateThresholds(SettingsBundle):
-                    + Notifies the MqttManager of a change
-                    in the thresholds
-            
-            + MqttManager:
-                + MqttClient getClient():
-                    + Returns a new MqttClient object
-                + void connect(MqttConnOpts):
-                    + Connects the client with the
-                    given mqtt connection options
-                + void connectClient():
-                    + Calls getClient and connect to
-                    connect to the MQTT broker (The 
-                    URL, Port and clean session variables are
-                    given as part of the SettingsBundle 
-                    that must be provided with the initialisation
-                    of the MqttManager object).
-                    
-                    + Subscribes to the newConnections and 
-                    requestAcknowledgement topics (see [topics](topics))
-                    
-                + void publish(String, String):
-                    + Publishes the given message
-                    to the given topic
-                    
-                + void subscribe(String):
-                    + Subscribes to the given 
-                    topic (with a QoS of 2)
-                    
-                + @Override void connectionLost(Throwable):
-                    + Clears the clientAverages table
-                    from the Data Base
-                
-                + @Override void messageArrived(String, String):
-                    + Parses the topic in which the
-                    topic arrived
-                        + If it's a new connection:
-                        Subscribes to the 
-                        connections/Connected/\<Incoming message(UUID)\>
-                        + If it's an already connected client:
-                        Parses the message ([For message format see here](#message_format)). 
-                            + If the topic's UUID 
-                            is different from the message's UUID, it does not accept the
-                            incident. 
-                            + If not, uses IncidentManager to handle
-                            all of the incident's operations (save, notify client, etc)
-                            by supplying it the current user's thresholds
-                        
-                        + If it's a request for acknowledgement:
-                            Notifies the requesting client about
-                            the applications availability
-                    
-                + void updateThresholds(SettingsBundle):
-                    + Updates the object's thresholds to the new ones
-                    
-                + @Override void deliveryComplete(IMqttDeliveryToken):
-                    + Not used
-                    
-            + IncidentManager:
-                + @Override void run():
-                    + If the provided light and proximity values are
-                    within the thresholds:
-                        + If another incident has occurred
-                        with an at most 1 second difference, 
-                        notifies both clients about 
-                        imminent danger
-                        
-                        + If not, notifies the current client
-                        about a possibility of impact **if** the 
-                        client is not currently in 
-                        warning/danger mode
-                    + If not, notifies the client that
-                    the danger signal should stop 
-                    if one is playing (The android client
-                    checks this)
-                    
-                + boolean checkValueLight():
-                    + Queries the Data Base to find
-                    the current client's average, times they 
-                    have contacted the desktop application,
-                    the current light value sum and whether
-                    the client is currently ringing.
-                    
-                    + If they have provided enough
-                    values (this can be changed in the
-                    BundleClasses$Constants) and 
-                        + Their current light sensor value is below 
-                        the client's average lighting - the 
-                        threshold, returns true
-                        
-                        + Their current light sensor value
-                        is above the client's average lighting + the
-                        threshold, resets the client in the 
-                        clientAverages table and returns true.
-                        (The client's
-                        average will be recalculated 
-                        the next Constants.AVERAGE_TIMES times they
-                        contact the server)
-                        
-                        + Their current light sensor value is within
-                        the client's average lighting +- the threshold, 
-                        it returns false
-                + boolean checkValueProx():
-                    + Checks whether the given proximity value
-                    is below the threshold. Returns true or false 
-                    accordingly
-                
-                + ClientAverage reset(ClientAverage):
-                    + Resets the given client average:
-                        + Sets ringing to false
-                        + Sets light average to 0
-                        + Sets light sum to 0
-                        + Sets times contancted to 0
-                
-                + boolean checkIncidentTime():
-                    + Checks the last incident date and time
-                    in the Data Base.
-                    
-                    + If the last incident did not occur 
-                    on the same day as the current one, returns false
-                    
-                    + If the last incident did occur on the same day
-                    but not in the same hour or minute, returns false
-                    
-                    + If the last incident did occur in the same 
-                    hour and minute but not within a one second
-                    difference, returns false
-                    
-                    + If the last incident occurred within the same 
-                    hour, minute *and* second, returns true
-            + DataBaseManagerThread:
-                + Notes:
-                    + + We provide to the constructor a String
-                    that represents the operation we want the thread
-                    to perform.
-                    (Valid strings are 
-                    defined in BundleClasses$Constants) 
-                    + The class offers 6 constructors. We
-                    call them according to the operation string 
-                
-                + Function names explain the operation they perform 
-                          
-            + DataBaseManager:
-                + void saveIncident(Incident):
-                    + Inserts the given incident into log
-                
-                + IncidentTime getLastIncidentTime():
-                    + Returns the last incident's date and time
-                    or null if the last date is not today
-                    
-                + void updateDanger(IncidentTime):
-                    + Changes the level of danger to 1
-                    for the specified UUID and incident date 
-                    and time
-                
-                + List<Incident> searchDB(list of filters):
-                    + Creates an SQL query by going through the 
-                    supplied filter list and only inserts the ones
-                    that are given by the user
-                
-                + int getSelectedProfile():
-                    + Queries the settingsProfile table 
-                    and returns the currently selected 
-                    user profile 
-                    
-                + int getMaxProfileId():
-                    + Returns the current max ID for the
-                    settings table (Didn't use AUTO-INCREMENT 
-                    for the profileID column at first and based
-                    the entire profile creation logic on that.
-                    Did not have time to fix.)
-                
-                + void switchProfile(int):
-                    + Changes the currently selected
-                    user profile in the settingsProfile table to newId. 
-                
-                + void updateProfile(SettingsBundle):
-                    + Updates the settings of the specified ID in
-                    the settings table
-                    
-                + void deleteProfile(Profile):
-                    + Deletes the specified profile from the
-                    settings table
-                    
-                + void saveNewProfile(SettingsBundle):
-                    + Inserts a new profile into the settings table
-                    
-                + SettingsBundle getProfile(int):
-                    + Returns the user settings for the specified profile
-                
-                + List<SettingsBundle> getAllProfiles():
-                    + Returns a list of all the profiles
-                    contained in the settings table
-                    
-                + ClientAverage getClientAverage(String):
-                    + Returns the specified client's average if it exists.
-                    If it does not, it inserts a new one with the input
-                    UUID and returns that.
-                    
-                + void insertClientAverage(ClientAverage):
-                    + Inserts the client average into the
-                    clientAverages table
-                    
-                + void updateClientAverage(ClientAverage):
-                    + Updates the specified client's average 
-                    in the clientAverages table
-                    
-                + void clearClients():
-                    + Deletes all the entries from the 
-                    clientAverages table. Called when the 
-                    programme closes
-                    
-                + void executeStatement(String):
-                    + Executes the specified SQL statement
-                    
-                + ResultSet executeQuery(String):
-                    + Executes the specified SQL query
-                    and returns the results
-                    
-                + void closeConnection():
-                    + Closes the connection with the 
-                    Data Base
-                
-            + BundleClasses:
-                + All of the bundle classes only contain their
-                getter - setter methods
+            |Class Name             |Method              |Description|
+            |-----------------------|--------------------|-----------|
+            |Main                   |main                | Starts the application's two main threads (WindowThread, MqttManagerThread)
+            |                       |updateThresholds    | Notifies the MqttManager that the user changed the thresholds in the Settings tab
+            |                       |close               | Only called by Windows$Window.stop(). Interrupts the threads and closes the application
+            |WindowThread           |@Over run           | Starts Window inside a thread
+            |Window                 |launchWindow        | Launches the main FXML window
+            |                       |start               | Sets the stage according to the main_screen.fxml file
+            |SearchController       |search              | Reads the values given by the user and queries the DataBase accordingly
+            |SettingsController     |@Over initialise    | Initialises the profile ComboBox with values from the database and fills in the settings according to the last chosen profile by the user
+            |                       |save                | If the user is updating an existing profile -> Checks for input errors and updates the Data Base. If the user is creating a new profile -> Checks for input errors and inserts the new data into the Data Base. Returns the newly saved data (useful for apply)
+            |                       |updateProfile       | Called by settingsController.save when a profile is being updated. Updates the ComboBox and the Data Base with the given data
+            |                       |updateProfilesCombo | Updates the profile combo with any new additions to the profiles list
+            |                       |deleteProfile       | Deletes the currently selected profile from the combo box and the database (The default profile cannot be deleted)
+            |                       |handleComboBoxAction| Updates the TextFields whenever a new item is chosen in the ComboBox
+            |                       |apply               | Saves the user's settings and notifies the MQTT client (through Main) of the change
+            |SearchResultsWindow    |createTable         | Initialises a table view with the contents of the incident list
+            |                       |createPage          | Creates the pagination of the current TableView (does not work very well)
+            |                       |showWindow          | Displays the Search Results Window
+            |DateAndTimeUtility     |getDate             | Returns the current date
+            |                       |getTime             | Returns the current time
+            |                       |dateToParts         | Splits the given date String into 3 parts (yyyy-mm-dd)
+            |                       |timeToParts         | Splits the given time string into 3 parts (hh:mm:ss)
+            |MqttManagerThread      |@Over run           | Creates a new MqttManager object and starts it
+            |                       |updateThresholds    | Notifies the MqttManager of a change in the thresholds
+            |MqttManager            |getClient           | Creates and returns a new MqttClient object
+            |                       |connect             | Connects the client with the given mqtt connection options
+            |                       |connectClient       | Calls getClient and connect to connect to the MQTT broker (The URL, Port and clean session variables are given as part of the SettingsBundle that must be provided with the initialisation of the MqttManager object). Also subscribes to the newConnections and requestAcknowledgement topics (see [topics](topics))
+            |                       |publish             | Publishes the given message to the given topic
+            |                       |subscribe           | Subscribes to the given topic (with a QoS of 2)
+            |                       |@Over connectionLost| Clears the clientAverages table from the Data Base
+            |                       |messageArrived      | Parses the topic in which the topic arrived. If it's a new connection -> Subscribes to the connections/Connected/\<Incoming message(UUID)\>. If it's an already connected client -> Parses the message ([For message format see here](#message_format)). If the topic's UUID is different from the message's UUID, it does not accept the incident. If not, uses IncidentManager to handle all of the incident's operations (save, notify client, etc) by supplying it the current user's thresholds. If it's a request for acknowledgement -> Notifies the requesting client about the applications availability
+            |                       |updateThresholds    | Updates the object's thresholds to the new ones
+            |                       |deliveryComplete    | Not Used
+            |IncidentManager        |@Over run           | If the provided light and proximity values are within the thresholds -> If another incident has occurred with an at most 1 second difference, notifies both clients about imminent danger. If not, notifies the current client about a possibility of impact **if** the client is not currently in warning/danger mode. If not, notifies the client that the danger signal should stop if one is playing (The android client checks this)
+            |                       |checkValueLight     | Queries the Data Base to find the current client's average, times they have contacted the desktop application, the current light value sum and whether the client is currently ringing. If they have provided enough values (this can be changed in the BundleClasses$Constants) and their current light sensor value is below the client's average lighting - the threshold, returns true. If their current light sensor value is above the client's average lighting + the threshold, resets the client in the clientAverages table and returns true. (The client's average will be recalculated the next Constants.AVERAGE_TIMES times they contact the server). If their current light sensor value is within the client's average lighting +- the threshold, it returns false
+            |                       |checkValueProx      | Checks whether the given proximity value is below the threshold. Returns true or false accordingly
+            |                       |reset               | Resets the given client's information
+            |                       |checkIncidentTime   | Returns true if the last incident occurred within the same second as the new incident
+            |DataBaseManagerThread  |**Note 1**          | We provide to the constructor a String that represents the operation we want the thread to perform.(Valid strings are defined in BundleClasses$Constants). The class offers 6 constructors. We call them according to the operation string
+            |                       |**Note 2**          | All of the methods' names explain the operation they perform
+            |DataBaseManager        |saveIncident        | Inserts the given incident into log
+            |                       |getLastIncident     | Returns the last incident's date and time or null if the last date is not today
+            |                       |updateDanger        | Changes the level of danger to 1 for the specified UUID and incident date and time
+            |                       |searchDB            | Constructs an SQL query by going through the supplied filter list and only inserts the ones that are given by the user
+            |                       |getSelectedProfile  | Queries the settingsProfile table and returns the currently selected user profile
+            |                       |getMaxProfilesID    | Returns the current max ID for the settings table (Didn't use AUTO-INCREMENT for the profileID column at first and based the entire profile creation logic on that. Did not have time to fix.)
+            |                       |switchProfile       | Changes the currently selected user profile in the settingsProfile table to newId.
+            |                       |updateProfile       | Updates the settings of the specified ID in the settings table
+            |                       |deleteProfile       | Deletes the specified profile from the settings table
+            |                       |saveNewProfile      | Inserts a new profile into the settings table
+            |                       |getProfile          | Returns the user settings for the specified profile
+            |                       |getAllProfiles      | Returns a list of all the profiles contained in the settings table
+            |                       |getClientAverage    | Returns the specified client's average if it exists. If it does not, it inserts a new one with the input UUID and returns that.
+            |                       |insertClientAverage | Inserts the client average into the clientAverages table
+            |                       |updateClientAverage | Updates the specified client's average in the clientAverages table
+            |                       |clearClients        | Deletes all the entries from the clientAverages table. Called when the programme closes
+            |                       |executeStatement    | Executes the specified SQL statement
+            |                       |executeQuery        | Executes the specified SQL query and returns the results
+            |                       |closeConnections    | Closes the connection with the Data Base
+            |BundleClasses          |*                   | All of the bundle classes only contain their getter - setter methods
+       
