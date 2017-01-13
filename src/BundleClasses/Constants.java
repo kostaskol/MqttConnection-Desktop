@@ -92,7 +92,7 @@ public class Constants {
     public static final String MESSAGE_NO_WARNING = "no warning";
     public static final String MESSAGE_STOP_WARNING = "stop warning";
 
-    public static final int AVERAGE_TIMES = 5;
+    public static final int AVERAGE_TIMES = 3;
 
 
     /*

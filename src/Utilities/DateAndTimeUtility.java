@@ -1,4 +1,4 @@
-package Managers.DTManager;
+package Utilities;
 
 
 import java.time.LocalDateTime;
@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 /**
  * Manager class that manages simple date and time operations
  */
-public class DateAndTimeManager {
+public class DateAndTimeUtility {
 
     public static String getDate() {
         LocalDateTime now = LocalDateTime.now();

@@ -1,9 +1,9 @@
 package Managers.MqttManager;
 
 import BundleClasses.*;
-import Managers.DTManager.DateAndTimeManager;
 import Managers.DataBaseManager.DataBaseManager;
 import Managers.DataBaseManager.DataBaseManagerThread;
+import Utilities.DateAndTimeUtility;
 
 /**
  * Class that checks the given values, publishes different levels of warnings
@@ -44,8 +44,8 @@ public class IncidentManager extends Thread {
          */
         if (lightCheck.equals(Constants.MESSAGE_WARNING)
                 || proxCheck.equals(Constants.MESSAGE_WARNING)) {
-            String date = DateAndTimeManager.getDate();
-            String time = DateAndTimeManager.getTime();
+            String date = DateAndTimeUtility.getDate();
+            String time = DateAndTimeUtility.getTime();
             DataBaseManager dbManager = new DataBaseManager();
             ClientAverage client = dbManager.getClientAverage(id);
             dbManager.closeConnection();
@@ -53,6 +53,9 @@ public class IncidentManager extends Thread {
 
 
             if (!checkIncidentTime()) {
+                /*
+                 * We don't send out another warning signal if the client is already ringing
+                 */
                 if (!isRinging) {
                     client.setIsRinging(true);
                     DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
@@ -266,8 +269,8 @@ public class IncidentManager extends Thread {
          */
         DataBaseManager dbManager = new DataBaseManager();
 
-        String timeString = DateAndTimeManager.getTime();
-        int[] currentTime = DateAndTimeManager.timeToParts(timeString);
+        String timeString = DateAndTimeUtility.getTime();
+        int[] currentTime = DateAndTimeUtility.timeToParts(timeString);
         /*
          * Returns the most recent incident FOR TODAY.
          * If there were no incidents today or an error occurred, it returns null

@@ -54,8 +54,8 @@ public class MqttManager implements MqttCallback {
         connect(connOpts);
         publish(Constants.LOG_TOPIC,
                 "MQTT | " + currentSettings.getClientName() + " connected");
-        subscribe(2, Constants.NEW_CONNECTION_TOPIC);
-        subscribe(2, Constants.REQUEST_ACKNOWLEDGEMENT_TOPIC);
+        subscribe(Constants.NEW_CONNECTION_TOPIC);
+        subscribe(Constants.REQUEST_ACKNOWLEDGEMENT_TOPIC);
     }
 
     public static void publish(String topic, String message) {
@@ -70,13 +70,13 @@ public class MqttManager implements MqttCallback {
         }
     }
 
-    private void subscribe(int QoS, String topic) {
+    private void subscribe(String topic) {
         if (client != null) {
             if (client.isConnected()) {
                 publish(Constants.LOG_TOPIC,
                         "MQTT | Subscribing to topic " + topic);
                 try {
-                    client.subscribe(topic, QoS);
+                    client.subscribe(topic, 2);
                 } catch (MqttException e) {
                     e.printStackTrace();
                 }
@@ -89,6 +89,7 @@ public class MqttManager implements MqttCallback {
     public void connectionLost(Throwable throwable) {
         DataBaseManager dbManager = new DataBaseManager();
         dbManager.clearClients();
+        dbManager.closeConnection();
     }
 
     @Override
@@ -100,7 +101,7 @@ public class MqttManager implements MqttCallback {
             //Sort operation by topic:
             switch (topicParts[1]) {
                 case Constants.NEW_CONNECTION_TOPIC_SIMPLE:
-                    subscribe(2, Constants.CONNECTED_TOPIC + mqttMessage);
+                    subscribe(Constants.CONNECTED_TOPIC + mqttMessage);
                     publish(Constants.LOG_TOPIC,
                             "MQTT | Got new ID: " + mqttMessage);
                     break;

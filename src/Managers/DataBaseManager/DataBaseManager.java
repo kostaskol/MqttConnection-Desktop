@@ -1,8 +1,8 @@
 package Managers.DataBaseManager;
 
 import BundleClasses.*;
-import Managers.DTManager.DateAndTimeManager;
 import Managers.MqttManager.MqttManager;
+import Utilities.DateAndTimeUtility;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -59,8 +59,8 @@ public class DataBaseManager {
      * This is useful for updating to danger later on)
      */
     public IncidentTime getLastIncidentTime() {
-        String today = DateAndTimeManager.getDate();
-        int[] todayParts = DateAndTimeManager.dateToParts(today);
+        String today = DateAndTimeUtility.getDate();
+        int[] todayParts = DateAndTimeUtility.dateToParts(today);
         /*
          * This will give us the most recent incident
          */
@@ -78,7 +78,7 @@ public class DataBaseManager {
                  */
                 String date = rs.getString("date");
 
-                int[] dateParts = DateAndTimeManager.dateToParts(date);
+                int[] dateParts = DateAndTimeUtility.dateToParts(date);
                 for (int i = 0; i < 3; i++) {
                     if (dateParts[i] != todayParts[i]) {
                         System.out.println(dateParts[i] + " not " + todayParts[i]);
@@ -88,7 +88,7 @@ public class DataBaseManager {
                 /*
                  * We return the most recent incident and the involved user's id
                  */
-                tmp = new IncidentTime(DateAndTimeManager.timeToParts(rs.getString("time")),
+                tmp = new IncidentTime(DateAndTimeUtility.timeToParts(rs.getString("time")),
                         rs.getString("id"));
             }
 
@@ -131,7 +131,7 @@ public class DataBaseManager {
         if (id != null) {
             if (!id.equals("")) {
                 sql += " WHERE ";
-                sql += " id=" + id;
+                sql += " id LIKE \"%" + id + "%\"";
                 numOfVars++;
             }
         }
@@ -238,7 +238,7 @@ public class DataBaseManager {
                 /*
                  * Get all values more recent than interval minutes (for today)
                  */
-                String currDate = DateAndTimeManager.getDate();
+                String currDate = DateAndTimeUtility.getDate();
                 sql += " time > date_sub(now(), interval " + interval + " minute) AND date=\"" + currDate + "\"";
             }
         }
@@ -323,18 +323,9 @@ public class DataBaseManager {
     }
 
     /*
-     * Used when we want to change the current profile to another specific one
-     */
-    private void changeProfile(int newId, int oldId) {
-        String sql = "UPDATE settingsProfile SET currId=" + newId + " WHERE currId=" + oldId;
-        executeStatement(sql);
-    }
-
-    /*
      * Used when we want to change the selected profile to another one
      */
     public void switchProfile(int newId) {
-        int oldId = getSelectedProfile();
         String sql = "UPDATE settingsProfile SET currId=" + newId;
         executeStatement(sql);
     }
@@ -361,7 +352,7 @@ public class DataBaseManager {
     public void deleteProfile(Profile prof) {
         String sql = "DELETE FROM settings WHERE profileID=" + prof.getProfileId();
         executeStatement(sql);
-        changeProfile(0, prof.getProfileId());
+        switchProfile(0);
     }
 
     /*
@@ -379,7 +370,7 @@ public class DataBaseManager {
                 bundle.getProfId() + ", " +
                 bundle.getFrequency() + ")";
         executeStatement(sql);
-        changeProfile(bundle.getProfId(), getSelectedProfile());
+        switchProfile(bundle.getProfId());
     }
 
     public SettingsBundle getProfile(int selectedProfile) {
