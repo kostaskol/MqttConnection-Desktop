@@ -1,9 +1,8 @@
-+ Project 2016 Phase 2: </br>
-    Index:
-    + [**Data Base**](#db)
-    + [**Topics**](#topics)
-    + [**Classes**](#classes)
-    </br> </br> </br> </br> </br>
++ Project 2016 Phase 2:  
+    Index:     
+    + [**Data Base**](#db)    
+    + [**Topics**](#topics)    
+    + [**Classes**](#classes)           
     
     + <a name="db">Data Base:</a>
         + The programme uses the MariaDB database and JDBC driver which 
@@ -19,7 +18,7 @@
             are stored
             + settingsProfile - Where the currently selected
             profile is stored (name not very accurate. 
-            Did not have time to change it)
+            Did not have time to change it)  
     + <a name="topics">MQTT Topics used:</a>
         + log: Operation messages from the
         desktop client are sent here for better 
@@ -51,7 +50,7 @@
         + mainClient/disconnected: If the desktop
         application disconnects ungracefully 
         (it always does), all of the connected clients
-        are notified and go into Offline Mode
+        are notified and go into Offline Mode  
         
     + <a name="classes">Classes:</a>
         + The Class Diagram:
