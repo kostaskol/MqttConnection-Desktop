@@ -21,7 +21,7 @@
             Did not have time to change it)  
         + Diagram:  
          <p align="center">
-            <img src="https://lh3.googleusercontent.com/nEyhqHENTL1fLNgiRlfEsoqh8IOsCRS6PFukUdy6TU26RABA2YGibMyLkPbgC-W_XSGnuRQyjf3ttMnAZWHxm__M5aUF_MLasmqgjRYBri8jsgUWLd6ORr5ZiYPnj_Yj8_AO4kMal4Q84k6wyJZjp8Awf69cTvqrt-2tneu1BP6Q7WaHBo3D9tKB-i0nFVuNvEsiMvztak8sFm-EpAxinvDwlKA-xfLyEYUForXl28OlwGbMWUs3mgpzuoZfvWfoJt4fxuScF5ld7TKpVT4U9X49O2I6oK2Qu9OK1-9kd8_Eo9mBuBJO2zu9DlOYZ7y38aP6gMFwD33EBbVS62ZxA-uu5gqhB816dFkLrkscdkVnId7m5CLsotzpgXbHu45XTwOmw7Ck7jLh_73SjSbNJTZMb_UwO_R20jVTko1dtx-umLd_J-9i986xd9p9sdJJe4DqpsHwYvUSf71hY-Xl6PmS_qJz_I_xf5YtJ1bfHVt7G5mDP9zIkAxvQa48B6RzNKbx9cm8v-xwVSv563_qhH9XrWfknT7CXve_xvtM_qPxF6HcoJX9djCaonGBXy8Nx5xXO-MgvN71igMG9vuiWkuzZwSjh4Y4PtQLu4O-jmFLeZofRfHQ=w609-h659-no"
+            <img src="https://lh3.googleusercontent.com/RTBO6ryXwmlIhg1kr3BfixPynJuC79nL6hjNR1uR4LidBf9gBFgxOL1oZtDBHf-AsQSq1UsrTIu4TzB0mXuFlSmLPb-gc7lrdg0aIHdDzguRSlgbkXNtr4Dl4AodJB6UAhekBYdMVv2BwMDYR8WwHQZhObpK3N8FNBP2TU5-7AQ-hU3FZBslaWaJ8k7Mkvg3O24fR-UZzMEhO5kWONZbELptQ1dMduMOLFyaLRSK1HIPsSvYqz1zlaF8tP8VaZFo1lonsdiG8HHAxW0PNFYCt8t8VcwB313GCYC79Ht5TFLALYX-50hiaHLuQZaC640CWsKzG-yKrj1L8FInw2vBBPdFi1XY5wgMnWr9LxJ19ZfGJc08sfA2959WsVzCYJz9pos6sjMK3vSddt5dpolruu16KveMpS2JL2mVGnbuXyeZuOyGX7EKesTO7UjYYSZoRuHDWFwalqHzEEE5M8VZQSx2WWRzp09fBf8cuTuOPbehUUTatVwYxu4dy9k4aKXhL0IITnc0vNT6s2Xs0wvCPcpjb9evHULdZI-gx2Mnv06tICMrZ83iyoBdIx7tBfKD2thyMJVC8rJWPaNzfSprVmfP0R85FMRihIqNY5KmMg12NJQJXQOg=w609-h659-no"
             />
         </P>
     + <a name="topics">MQTT Topics used:</a>
