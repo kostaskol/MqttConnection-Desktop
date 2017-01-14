@@ -47,6 +47,7 @@
             the danger messages to this topic
             + stopSounds: The desktop client publishes
             the stop all sounds messages to this topic  
+            + acknowledges: The client publishes to this topic of a specific UUID to inform the android client that the desktop client is online
         + connections/requestAck: Before an android
         client goes into Online Mode, they request
         and acknowledgement message from the desktop 
@@ -56,7 +57,7 @@
         (it always does), all of the connected clients
         are notified and go into Offline Mode  
         <p align="center">
-            <img src="https://lh3.googleusercontent.com/2jaFsg99jtHcUNfRbImjZOuFDq19Gwbvpd0BjlrtRcTAMBUJqsYN_9xX5IHouYSz0KADi9jXGsXCv0kirRz4kRJmjzTQ0YYFhTgkSqH_ylb1N5F3lPNLdr5p9ER3281WbT3zUBlFjrEYo3VQdc7UdicSiD3_pFA7_qRQikhHitbuOgFYxpvnW3WIkjqM8RLEzBlfydpqAiMmUX4J-nN_1gsaBo-83Um2Ho2XbDz9vrf7yHpHKLE7t-NV33Jgyjo7icbxtCk9hQquU6rJRCfkJjgNk4N6fDggYh24CU209MnbuD7KjJZiYh5fsQ2rgBK2k0f3kNJwjfyXB0n2bjQSyDLiMsv4iNgeAw3tuVPBLdQ8X3yOpzp3I9Gi_wc0ws9BGNd00_2EhOoTCQzYKfnkugntNMC_uIDxAVBgPY8eE7eLJBB6J2wfIIxqLu05TDbu-N5XAMUPFpjsrYIoomS5pPX7RNvF0-W09xyZu8g-W-DjqAI78adEKSNyBrSxVzCUDVT-I83I0qUvIQfIiTwUQIq5bWnbAEJSIiy2K0rI1KpDWaG0dDVBiGADsX3IXZSpniLCVmANj-gJJlrLdELzQ4XktW-Ewaj7CpbYnu3T8EfNctMuH1Og=w984-h500-no"
+            <img src="https://lh3.googleusercontent.com/EMTDe2A2bCl9MuYJKZhCLX_tX7UdKtdf8fYdxdcuCFidDoLNWDPSGSRl4oVtERlpl-79DWBNPMcfacocgttfsDVU6azZSdBP_WkuWFD2jJ2F8gW6waPMZqLLN0g3wm8OvVqph2EdKa19BJYjsqYHRyAvq9kLpfUcwLtEaH2fTq80pnvMS5q1wzfTGcRKl0gtI-GgZoyINp9rIRpnKFovbLAk6h2PP1O4wwLJT99YfX0txHF1OFchctcVTubwk4zjAbNMjcq3cL0Ad6cVlIBt_71riQmHjeu2gCpdY2uXs68ZlwlUXNOzh9X7C2BwyIrDisLDZmPhtLoNUSl5eCoe_j5sL4CZAVWomGBtwjofZsbiA3fe1D4qyizQ1eRNseiFzk5f9Rcaoa3z4FiseBP9KKZbIyibwM7xOWOv-6B3U-l-9cg8B4FxBR1hLd7QfB9xZuQ80dU0NywqltCgg1tsRDz2-pbNJ1aL095OfSZeZwjX290c1as0ZkAkJZhaa1_eKt1ZajAqfI2CZdJIfhzdQIbiKmLn-NgJ6fQ4Mh6Ve1OXOlOXtiuRcmVbKGWFeoQXeBHu_o1KupHzSX5Xff5GLd_zgDs7cP_fIN0VhO6HFdMsm4GmYExz=w1063-h501-no"
             />
         </P>
         + <a name="message_format">Message format by topic:</a>
