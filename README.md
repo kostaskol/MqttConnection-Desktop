@@ -187,14 +187,15 @@
                 
                 + An example:    
                 We search for incidents that happened 
-                    + To users with a UUID that contains the characters:
-                    "f28"
-                    + On the 7th of January, 2017
+                    <ul>
+                    <li> To users with a UUID that contains the characters:
+                    "f28"</li>
+                    <li> On the 7th of January, 2017</li>
                     
                     <p align="center">
                         <img src="https://lh3.googleusercontent.com/A-053ZZvedUWmwCMGW8_qv2VBEmcsC7JoFW0K871pbOPQGsMQSbPYS3AdX7VL_fros75pT0kmz7TuSecgFLcZ3K6xF_x1sTf7B-wp36f4y3GLj0YklWtFZU7hfYgBDIZX1xzwfC6_wL8GPbgj1TUOfdFKw_EenqWt5y5q1MTNVkP_Tb2yJQjGBL2rKtdBGKE-r0o4Tb30Zdhi27PH_Gi0mfY6BYK280p-5dwwY0bFR-uX2F1OMQIQ3fjliI4DxStGesLz-8p6pk-avtqMzUFxHZmesVDVygWbONzQCNChqlUU77Ufl6rqyNdgCT5LNouZPLZ4BhyVTddAEAnvFGlnByTXXCIzxRvxOMCz523CVS8vAExY2Vg7EfNg604XD0yu_7WzoBYxhe-s8ke5M625AvOLPUINmSED6obsOz8rFfM2DEuflYuPcXbbR8kCW-PfqDLXnP0fQMc6I1yCtLc5r_7u_4YNe9a19rPBew34a9FMh1gZTR8AEloRFzlrtjxMbh9wEWDQ2WUlaLOnalXa3vzZx8LSul3izqzkLFfShMlNgXZfm2Z07ni19-IqRDWQJbR7x3Z5kauYeynrMcCiVlVQn-5_iGnBM-w3mDBWn3xFKPrzrKc=w597-h487-no" />
                     </p>
-                    + The results are:
+                    <li> The results are:</li>
                     
                     <p align="center">
                         <img src="https://lh3.googleusercontent.com/ydnmG4LYeLqGYQ4GAfeEQ7J3-GBq6uel51rC7Jm6yzzl2RyaDDHBrkUI4PZAPMpyBNpo8kSBLvqtPoUT6yhnr-ebOFWdZbvY54yUMm7UVHDsp-aqfyJpOe6vRtIVBe8DqVnbZHu2eRDsRWLSPG_jl91yKH-VHJ0RdlfZeD66Zr5RuN32AsLY0yKrxvi7GBL23pB5cv1wBFwPF1qd_NZgMODDhbUnO4hWLm_o2eSYNe7S7-gSyEvQqchPzw3bVpyxbb-ESjGQ5G0hXdVTETiAsGlmbaSz8Bah0VULXl6_O1SJwdrlNOn7bm6PWvpAiLdWJR7MCspWaJPHO-SlCDFiyogJthujoaL0HqbVAup7ZgQKuwScrdg_Dvl5G5xOaBoDPaH_L8j6919UzwyPsbqijM71IjI_lyFlbcyy7i0jqu-OYL_iKRZwbyypARpcqNgf6FoxSvLBj3O9tnfq3po1VUcmMxUiw6FU64CTcfCTANPjY0KXH__oVf6OaGhJ6XW0FVs-a5n8Mz-F1QJC1Ve2983IuWGOhNqRygfPKrb5RMrpbwylTLLd4sYciR2qVLmOTSTIHeR398YSZp3AmWRrpSmW_rTHBggyOlV__hNQYlPEseTevdhv=w737-h574-no" />
@@ -203,7 +204,7 @@
                     <p align="center">
                         <img src="" />
                     </p>
-                        
+                    </ul>
             + The Settings Tab:
                 <p align="center">
                 	<img src="https://lh3.googleusercontent.com/OdcrOkLP-f5WpzVh9oPdLBcPJ5zVg6BQQMiggBYQoYKgAXgbaJV3lpeh8ZLhrMRm9HHkvSZFM2B_Isz4k3IPOEaiwLDzuc2ZKXtEZK2RqI3B1r1NEnHqbCEyQ3p3JEOr2pFxbV9NVgilELEGLVzQ0BG-eue7vQVj_ZAOkH5l5F6kqBQPy6tLicoKG7X7JvHdCSq7jJjngAZcV79bjV0yizdKUVP2cuY8d4seQtz3wMlAp4q6M0U--WCRQeGjIXBrKPdnlEU4csu8ZtK4pmsedimcqQ9UljhUM_Dp3y8dWXLsZ0TDzAhZzB6Ot2NgUkd0JFuvaPa1KzlwXpaKK6tMgbEexniiL3tLxV61utJYAxF5_cwScK4o6vSmNPrTEqdyMyjmTDgO7J6_SfKOZgN9l6VwoIrIPorBQaUy6vZyLJVVzr0-uBQCPGoPUTvarsZ2T21nci4c09lfFLiIRLAav0bKSlXGDNgqp0FoYr4qJc2LjUNy8tL-UIYKivX8I12aYtLE6GzwQ-ufds9O5bcyo7ONm8xaSS3ALXN2dhK0sBWgCf2hyU74cW7QvS08IFDLEII90nhoMhZ9O5z69yW2Z-iz2R2JTt7tB-nUCbxLQG2_b2nwZEzK=w598-h486-no" />
