@@ -2,7 +2,7 @@
     + <a name="db">Data Base:</a>
         + The programme uses the MariaDB database which 
         successfully ran on Linux (ArchLinux).
-        + The database's name is "project16".
+        + The database's name is *not* created by the application and must be imported from a self contained .sql file.
         + The database contains the following tables:
             + clientAverages - Where the connected clients'
             information is stored
