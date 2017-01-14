@@ -108,12 +108,12 @@
             |DateAndTimeUtility     |getDate             | Returns the current date
             |                       |getTime             | Returns the current time
             |                       |dateToParts         | Splits the given date String into 3 parts (yyyy-mm-dd)
-            |                       |timeToParts         | Splits the given time string into 3 parts (hh:mm:ss)
+            |                       |timeToParts         | Splits the given time string into 3 parts (hh\:mm\:ss)
             |MqttManagerThread      |@Over run           | Creates a new MqttManager object and starts it
             |                       |updateThresholds    | Notifies the MqttManager of a change in the thresholds
             |MqttManager            |getClient           | Creates and returns a new MqttClient object
             |                       |connect             | Connects the client with the given mqtt connection options
-            |                       |connectClient       | Calls getClient and connect to connect to the MQTT broker (The URL, Port and clean session variables are given as part of the SettingsBundle that must be provided with the initialisation of the MqttManager object). Also subscribes to the newConnections and requestAcknowledgement topics (see [topics](topics))
+            |                       |connectClient       | Calls getClient and connect to connect to the MQTT broker (The URL, Port and clean session variables are given as part of the SettingsBundle that must be provided with the initialisation of the MqttManager object). Also subscribes to the newConnections and requestAcknowledgement topics (see [topics](#topics))
             |                       |publish             | Publishes the given message to the given topic
             |                       |subscribe           | Subscribes to the given topic (with a QoS of 2)
             |                       |@Over connectionLost| Clears the clientAverages table from the Data Base
