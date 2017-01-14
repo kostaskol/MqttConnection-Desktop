@@ -1,8 +1,9 @@
 + Project 2016 Phase 2: </br>
     Index:
-    + [Data Base](#db)
-    + [Topics](#topics)
-    + [Classes](#classes)
+    + [**Data Base**](#db)
+    + [**Topics**](#topics)
+    + [**Classes**](#classes)
+    </br> </br> </br> </br> </br>
     
     + <a name="db">Data Base:</a>
         + The programme uses the MariaDB database and JDBC driver which 
