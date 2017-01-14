@@ -1,9 +1,9 @@
-+ Project 2016 Phase 2:  
-    Index:     
-    + [**Data Base**](#db)    
-    + [**Topics**](#topics)    
-    + [**Classes**](#classes)     
-    + [**Class Methods**](#methods)  
++ Project 2016 - 2017 - Phase 2 - Desktop Client:  
+    + Index:     
+        + [**Data Base**](#db)    
+        + [**Topics**](#topics)    
+        + [**Classes**](#classes)     
+        + [**Class Methods**](#methods)  
     _____________________________________________________________________________________________________________________________________
     + <a name="db">Data Base:</a>
         + The programme uses the MariaDB database and JDBC driver which 
