@@ -26,34 +26,34 @@
             />
         </P>
     + <a name="topics">MQTT Topics used:</a>
-        + log: Operation messages from the
+        + **log:** Operation messages from the
         desktop client are sent here for better 
         readability
-        + connections: Everything that has to
+        + **connections:** Everything that has to
         do with a connection. 
-        + connections/newConnections: When a new
+        + **connections/newConnections:** When a new
         android client connects, they notify
         the desktop client by publishing a message
         containing their UUID to this topic
-        + connections/connected: Already connected
+        + **connections/connected:** Already connected
         android clients publish to this + their UUID topic
-        + connections/connected/\<Client UUID>:
+        + **connections/connected/\<Client UUID>:**
         Already connected android clients publish
         to this topic.
         
-        + connections/connected/\<Client UUID>/
-            + warning: The desktop client publishes
+        + **connections/connected/\<Client UUID>/**
+            + **warning:** The desktop client publishes
             the warning messages to this topic
-            + danger: The desktop client publishes
+            + **danger:** The desktop client publishes
             the danger messages to this topic
-            + stopSounds: The desktop client publishes
+            + **stopSounds:-** The desktop client publishes
             the stop all sounds messages to this topic  
-            + acknowledges: The client publishes to this topic of a specific UUID to inform the android client that the desktop client is online
-        + connections/requestAck: Before an android
+            + **acknowledges:** The client publishes to this topic of a specific UUID to inform the android client that the desktop client is online
+        + **connections/requestAck:** Before an android
         client goes into Online Mode, they request
         and acknowledgement message from the desktop 
         client (ensuring that it is running)
-        + mainClient/disconnected: If the desktop
+        + **mainClient/disconnected:** If the desktop
         application disconnects ungracefully 
         (it always does), all of the connected clients
         are notified and go into Offline Mode  
@@ -62,16 +62,16 @@
             />
         </P>
         + <a name="message_format">Message format by topic:</a>
-            +  log -> No standard format
-            +  connections/newConnections -> \<"Client's UUID"\>
-            +  connections/connected/\<Client's UUID\> -> \<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">
-            +  connections/connected/\<Client's UUID\>/
-                +  warning -> "warning"
-                +  danger -> "danger"
-                +  stopSounds -> "stop warning"
-                +  acknowledged -> \<The frequency at which the android client should contact the desktop client\>
-            +  connections/requestAck -> \<"Client UUID"\>
-            +  mainClient/disconnected -> "disconnecting"
+            +  **log** -> No standard format
+            +  **connections/newConnections** -> \<"Client's UUID"\>
+            +  **connections/connected/\<Client's UUID\>** -> \<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">
+            +  **connections/connected/\<Client's UUID\>/**
+                +  **warning** -> "warning"
+                +  **danger** -> "danger"
+                +  **stopSounds** -> "stop warning"
+                +  **acknowledged** -> \<The frequency at which the android client should contact the desktop client\>
+            +  **connections/requestAck** -> \<"Client UUID"\>
+            +  **mainClient/disconnected** -> "disconnecting"
     + <a name="classes">Classes:</a>
         + The Class Diagram:
         <p align="center">
