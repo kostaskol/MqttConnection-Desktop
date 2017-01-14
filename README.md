@@ -1,14 +1,19 @@
-+ Project 2016 - 2017 - Phase 2 - Desktop Client:  
-    + Index:     
-        + [**Data Base**](#db)    
-        + [**Topics**](#topics)    
-        + [**Classes**](#classes)     
-        + [**Class Methods**](#methods)  
++ <h1> Project 2016 - 2017 - Phase 2 - Desktop Client: </h1>
+    + <h2> Index: </h2>
+        + <h3> [**Data Base**](#db) </h3>
+        + <h3> [**Topics**](#topics) </h3>
+            + <h4> [**Message Format**](#message_format) </h4>
+        + <h3> [**Classes**](#classes) </h3>
+            + <h3> [**Class Methods**](#methods) </h3>
+        + <h3> [**Screenshots**](#ss) </h3>
+        + <h3> [**Algorithm**](#algorithm) </h3>
     _____________________________________________________________________________________________________________________________________
-    + <a name="db">Data Base:</a>
+    + <h2> <a name="db">**Data Base:**</a> </h2>
         + The programme uses the MariaDB database and JDBC driver which 
         successfully ran on Linux (ArchLinux).
-        + The database is *not* created by the application and must be imported from a self contained .sql file.
+        + For the application to run successfully, [this sql dump](https://drive.google.com/open?id=0B103a5xnSqfobzhpQmgyc1JJUVk) must be imported into the MariaDB server running at
+          the location you specify in BundleClasses$Constants.DB_URL.
+        + Note that the database is *not* created by the application.
         + **_Note:_** To connect to the database, a username and password must be provided in the BundleClasses$Constants.USER - PASS
         + The database's name we used was "project16". To use a different name, please change the value of BundleClasses$Constants.DB_URL
         + The database contains the following tables:
@@ -25,68 +30,54 @@
             <img src="https://lh3.googleusercontent.com/RTBO6ryXwmlIhg1kr3BfixPynJuC79nL6hjNR1uR4LidBf9gBFgxOL1oZtDBHf-AsQSq1UsrTIu4TzB0mXuFlSmLPb-gc7lrdg0aIHdDzguRSlgbkXNtr4Dl4AodJB6UAhekBYdMVv2BwMDYR8WwHQZhObpK3N8FNBP2TU5-7AQ-hU3FZBslaWaJ8k7Mkvg3O24fR-UZzMEhO5kWONZbELptQ1dMduMOLFyaLRSK1HIPsSvYqz1zlaF8tP8VaZFo1lonsdiG8HHAxW0PNFYCt8t8VcwB313GCYC79Ht5TFLALYX-50hiaHLuQZaC640CWsKzG-yKrj1L8FInw2vBBPdFi1XY5wgMnWr9LxJ19ZfGJc08sfA2959WsVzCYJz9pos6sjMK3vSddt5dpolruu16KveMpS2JL2mVGnbuXyeZuOyGX7EKesTO7UjYYSZoRuHDWFwalqHzEEE5M8VZQSx2WWRzp09fBf8cuTuOPbehUUTatVwYxu4dy9k4aKXhL0IITnc0vNT6s2Xs0wvCPcpjb9evHULdZI-gx2Mnv06tICMrZ83iyoBdIx7tBfKD2thyMJVC8rJWPaNzfSprVmfP0R85FMRihIqNY5KmMg12NJQJXQOg=w609-h659-no"
             />
         </P>
-    + <a name="topics">MQTT Topics used:</a>
-        + **log:** Operation messages from the
-        desktop client are sent here for better 
-        readability
-        + **connections:** Everything that has to
-        do with a connection. 
-        + **connections/newConnections:** When a new
-        android client connects, they notify
-        the desktop client by publishing a message
-        containing their UUID to this topic
-        + **connections/connected:** Already connected
-        android clients publish to this + their UUID topic
-        + **connections/connected/\<Client UUID>:**
-        Already connected android clients publish
-        to this topic.
+    + <h2> <a name="topics">**Mqtt Topics:**</a> </h2>
         
-        + **connections/connected/\<Client UUID>/**
-            + **warning:** The desktop client publishes
-            the warning messages to this topic
-            + **danger:** The desktop client publishes
-            the danger messages to this topic
-            + **stopSounds:-** The desktop client publishes
-            the stop all sounds messages to this topic  
-            + **acknowledges:** The client publishes to this topic of a specific UUID to inform the android client that the desktop client is online
-        + **connections/requestAck:** Before an android
-        client goes into Online Mode, they request
-        and acknowledgement message from the desktop 
-        client (ensuring that it is running)
-        + **mainClient/disconnected:** If the desktop
-        application disconnects ungracefully 
-        (it always does), all of the connected clients
-        are notified and go into Offline Mode  
+        |Topic                                          |Subtopics                          |Usage                              |
+        |:----------------------------------------------|:---------------------------------:|:----------------------------------|
+        |log                                            |-None-                             |Operation messages from the desktop client are sent here for better readability
+        |connections                                    |-None-                             |Everything that has to do with a connection. 
+        |connections/newConnections                     |-None-                             |When a new android client connects, they notify the desktop client by publishing a message containing their UUID to this topic                |
+        |connections/connected/                         |-None-                             |Already connected android clients publish to this + their UUID topic|
+        |connections/connected/\<Client's UUID          |-None-                             |Already connected android clients publish to this topic.
+        |                                               |warning                            |The desktop client publishes the warning messages to this topic                          |
+        |                                               |danger                             |The desktop client publishes the danger messages to this topic                           |
+        |                                               |stopSounds                         |The desktop client publishes the stop all sounds messages to this topic                       |
+        |                                               |acknowledged                       |The client publishes to this topic of a specific UUID to inform the android client that the desktop client is online|
+        |connections/requestAck                         |-None-                             |Before an android client goes into Online Mode, they request and acknowledgement message from the desktop client (ensuring that it is running)                |
+        |mainClient/disconnected                        |-None-                             |If the desktop application disconnects ungracefully (it always does), all of the connected clients are notified and go into Offline Mode                      |
         <p align="center">
             <img src="https://lh3.googleusercontent.com/EMTDe2A2bCl9MuYJKZhCLX_tX7UdKtdf8fYdxdcuCFidDoLNWDPSGSRl4oVtERlpl-79DWBNPMcfacocgttfsDVU6azZSdBP_WkuWFD2jJ2F8gW6waPMZqLLN0g3wm8OvVqph2EdKa19BJYjsqYHRyAvq9kLpfUcwLtEaH2fTq80pnvMS5q1wzfTGcRKl0gtI-GgZoyINp9rIRpnKFovbLAk6h2PP1O4wwLJT99YfX0txHF1OFchctcVTubwk4zjAbNMjcq3cL0Ad6cVlIBt_71riQmHjeu2gCpdY2uXs68ZlwlUXNOzh9X7C2BwyIrDisLDZmPhtLoNUSl5eCoe_j5sL4CZAVWomGBtwjofZsbiA3fe1D4qyizQ1eRNseiFzk5f9Rcaoa3z4FiseBP9KKZbIyibwM7xOWOv-6B3U-l-9cg8B4FxBR1hLd7QfB9xZuQ80dU0NywqltCgg1tsRDz2-pbNJ1aL095OfSZeZwjX290c1as0ZkAkJZhaa1_eKt1ZajAqfI2CZdJIfhzdQIbiKmLn-NgJ6fQ4Mh6Ve1OXOlOXtiuRcmVbKGWFeoQXeBHu_o1KupHzSX5Xff5GLd_zgDs7cP_fIN0VhO6HFdMsm4GmYExz=w1063-h501-no"
             />
         </P>
-        + <a name="message_format">Message format by topic:</a>
-            +  **log** -> No standard format
-            +  **connections/newConnections** -> \<"Client's UUID"\>
-            +  **connections/connected/\<Client's UUID\>** -> \<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">
-            +  **connections/connected/\<Client's UUID\>/**
-                +  **warning** -> "warning"
-                +  **danger** -> "danger"
-                +  **stopSounds** -> "stop warning"
-                +  **acknowledged** -> \<The frequency at which the android client should contact the desktop client\>
-            +  **connections/requestAck** -> \<"Client UUID"\>
-            +  **mainClient/disconnected** -> "disconnecting"
-    + <a name="classes">Classes:</a>
+        + <h3> <a name="message_format">**Message format by topic:**</a> </h3>
+        
+            |Topic                                          |Subtopics                          |Message format                     |
+            |:----------------------------------------------|:---------------------------------:|:----------------------------------|
+            |log                                            |-None-                             |\<"Log message type" - "message"\>|
+            |connections/newConnections                     |-None-                             |\<"Client's UUID"\>                |
+            |connections/connected/\<Client's UUID>         |-None-                             |\<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">|
+            |                                               |warning                            |"warning"                          |
+            |                                               |danger                             |"danger"                           |
+            |                                               |stopSounds                         |"stop warning"                     |
+            |                                               |acknowledged                       |\<The frequency at which the android client should contact the desktop client\>|
+            |connections/requestAck                         |-None-                             |\<"Client's UUID"\>                |
+            |mainClient/disconnected                        |-None-                             |"disconnecting"                    |
+    
+    + <h2> <a name="classes">**Classes:**</a> </h2>
         + The Class Diagram:
         <p align="center">
             <img src="https://lh3.googleusercontent.com/hBPg0P4vuwBFw9Cb8hQXO7Hj5EueNqNw8gkcC9WfQ20RM0dZM-AQlmuT5DvB6Stu_-i2mEclZqaeJF0DsjUi8CRt-r3ekyh28T2R5_waEQZx2TyVVrC4l_j9UvK9Eyzb1osZAGn9qxOJqlPPTFZZcnolDGo6oqbgC0iyTlQTIrRY8Wl7QcufnNaPiKXq4eKRMR2p1rpi8G783yAf-lwImOGFXzqeqYJYVdu2l3QTpmg_vlq-0PKga3UDQZDVCQeYBYz-vD6bi2FRU_mAx-Vm49SPMqHdcewcSZEbTo6lhFDPUhGrS-zt0COMAt6HrLTgbcOFQ6bAvhY4ONf6TzG5FZpr4QxggbC7JyMkhOIAzy0vQi2-HtQ8wE4CcOlSER-SMyn5NCjERYlTSI_BHE5Jf1h-JXKBY77CUOp-5nuOiQATAEujl9g15cZq8HzMwjzRlXnyPfMfEOO2xgNwpPb0mWWiCDOzzFLqySwUrOIjwRv7waxn1x7LHQTjQakGOT70UTP4bvg0tu2RuAvBTeEv7tWKBpsf_I3SlDyCZqs0ZRWyA9fWALoecenBYMFcszWkFgvC4Qsfkc3HqmRHvCX1O4K27geGknJ6mhKQ4u_0nDnHKEcBi52Q=w965-h659-no"
             />
         </P>
-        + A brief description of all the classes and their methods:
+        + A brief description of all the classes:
     
         + There are 4 Class Types (in this project):
-            + Managers: They simplify or automate an operation
-            + Utilities: They provide some useful methods
-            + Bundles: They pack data for easy transfer
-            + Threads: They start other operations inside a thread
-            + Controllers: FXML Controllers
-            + Windows: FXML Windows
+            + **Managers:** They simplify or automate an operation
+            + **Utilities:** They provide some useful methods
+            + **Bundles:** They pack data for easy transfer
+            + **Threads:** They start other operations inside a thread
+            + **Controllers:** FXML Controllers
+            + **Windows:** FXML Windows
     
         + A description for all the classes can also be found 
         at the beginning of the corresponding file 
@@ -111,7 +102,7 @@
             |SettingsController   |Windows         |Controller    |FXML Controller for the Settings tab
             |Window               |Windows         |Window        |The main application window
             |WindowThread         |Windows         |Thread        |Starts the Main application window inside a thread
-        + <a name="methods">A short description for each of the class's methods:</a>
+        + <h3> <a name="methods">**A short description for each of the class's methods:**</a> </h3>
             
             |Class Name             |Method              |Description|
             |-----------------------|--------------------|-----------|
@@ -174,8 +165,7 @@
             |                       |executeQuery        | Executes the specified SQL query and returns the results
             |                       |closeConnections    | Closes the connection with the Data Base
             |BundleClasses          |*                   | All of the bundle classes only contain their getter - setter methods
-
-    + **Screenshots**  
+    + <h2> <a name="ss">**Screenshots**</a> </h2>
         + The application starts in the Main screen which contains 2 tabs:
             + The Search Tab:
                 <p align="center">
@@ -218,6 +208,15 @@
                 <p align="center">
                 	<img src="https://lh3.googleusercontent.com/Ew-WyQe2zYDScc2vShZW7B1XLAhcrZY3byV5NGosIaLWvVtjlbfKJO184s5TYhcFbbIwgGW57R0LMYX_5J4iPAL2Si16YU6d6V88hzyHFPBDxQ_vkz-eIHNdOqdLWn_d4TWMA8YO82hMNoolWZuKH77j2Ol5YQE9LcrvQ321LLBWldCVGofdvSowUeKQfnUD3f0efjAGMYTP6mF_Au1SPjd_A9kMG3FrgGKqd_p0C7Ss5YM_IDJ0k1ovyenchLfSd1Dz29ZeKaFGHHuGcyklCpZSnsVxMzY_6UpNMgZpQ-83uodLokTc5eyB-cwO16AAHaySc84qApPGByHrJMYbomhugwe0n3G2q-R66GLgR4e658PIhh-gWqHN3ylaLnnhpoAxXxEbq7KwOvr9N4h66I0PhxmfsliKQmj_Dqqpr2dNtClIB0GKtmimRjzyNt-_EYSzCDrU_LsPx5MEBSrvAb8XTsOjDDQils2qFpIavJdJ5aFGAB8a9BzFX3M3c4e3rnVh6KK72cryoakaBuv5OO7Q4FSSy0LeQDlvugJzp5tZJ3i1TA8qH0c85iugfwWLr09kik2BwRdtBS2esekvriig58UEnNBfzzTTjo5EWxmKQt_WFI_q=w600-h486-no" />
                 </p>
+    + <h2> <a name="algorithm">**Algorithm**</a> </h2>
+        1. A threshold and a current lighting value are supplied to the algorithm.
+        2. For the first set amount of times we receive a lighting value, we add it to a sum and do nothing else.  
+           When we have enough values, we calculate the user's current
+           environment average
+        3. We calculate the actual threshold ((100 - threshold) / 100)
+        4. If the lighting value is greater than the user's current average + the actual threshold, we recalculate the average
+        5. If the lighting value is less than the user's current average - the actual threshold, we warn them about a possibility of danger
+        6. If the lighting value is within these two limits, the user is persumed in a safe state
                 
 This is the end of the desktop application's README file.
 For information regarding the android client, please 
