@@ -185,24 +185,24 @@
                 filling in the given filters. They can search 
                 by any and all fields, except for Date and Time together.
                 
-                + An example:  
-                    + We search for incidents that happened 
-                        + To users with a UUID that contains the characters:
-                        "f28"
-                        + On the 7th of January, 2017
-                        
-                        <p align="center">
-                        	<img src="https://lh3.googleusercontent.com/A-053ZZvedUWmwCMGW8_qv2VBEmcsC7JoFW0K871pbOPQGsMQSbPYS3AdX7VL_fros75pT0kmz7TuSecgFLcZ3K6xF_x1sTf7B-wp36f4y3GLj0YklWtFZU7hfYgBDIZX1xzwfC6_wL8GPbgj1TUOfdFKw_EenqWt5y5q1MTNVkP_Tb2yJQjGBL2rKtdBGKE-r0o4Tb30Zdhi27PH_Gi0mfY6BYK280p-5dwwY0bFR-uX2F1OMQIQ3fjliI4DxStGesLz-8p6pk-avtqMzUFxHZmesVDVygWbONzQCNChqlUU77Ufl6rqyNdgCT5LNouZPLZ4BhyVTddAEAnvFGlnByTXXCIzxRvxOMCz523CVS8vAExY2Vg7EfNg604XD0yu_7WzoBYxhe-s8ke5M625AvOLPUINmSED6obsOz8rFfM2DEuflYuPcXbbR8kCW-PfqDLXnP0fQMc6I1yCtLc5r_7u_4YNe9a19rPBew34a9FMh1gZTR8AEloRFzlrtjxMbh9wEWDQ2WUlaLOnalXa3vzZx8LSul3izqzkLFfShMlNgXZfm2Z07ni19-IqRDWQJbR7x3Z5kauYeynrMcCiVlVQn-5_iGnBM-w3mDBWn3xFKPrzrKc=w597-h487-no" />
-                        </p>
-                        + The results are:
-                        
-                        <p align="center">
-                        	<img src="https://lh3.googleusercontent.com/ydnmG4LYeLqGYQ4GAfeEQ7J3-GBq6uel51rC7Jm6yzzl2RyaDDHBrkUI4PZAPMpyBNpo8kSBLvqtPoUT6yhnr-ebOFWdZbvY54yUMm7UVHDsp-aqfyJpOe6vRtIVBe8DqVnbZHu2eRDsRWLSPG_jl91yKH-VHJ0RdlfZeD66Zr5RuN32AsLY0yKrxvi7GBL23pB5cv1wBFwPF1qd_NZgMODDhbUnO4hWLm_o2eSYNe7S7-gSyEvQqchPzw3bVpyxbb-ESjGQ5G0hXdVTETiAsGlmbaSz8Bah0VULXl6_O1SJwdrlNOn7bm6PWvpAiLdWJR7MCspWaJPHO-SlCDFiyogJthujoaL0HqbVAup7ZgQKuwScrdg_Dvl5G5xOaBoDPaH_L8j6919UzwyPsbqijM71IjI_lyFlbcyy7i0jqu-OYL_iKRZwbyypARpcqNgf6FoxSvLBj3O9tnfq3po1VUcmMxUiw6FU64CTcfCTANPjY0KXH__oVf6OaGhJ6XW0FVs-a5n8Mz-F1QJC1Ve2983IuWGOhNqRygfPKrb5RMrpbwylTLLd4sYciR2qVLmOTSTIHeR398YSZp3AmWRrpSmW_rTHBggyOlV__hNQYlPEseTevdhv=w737-h574-no" />
-                        </p>
-                        
-                        <p align="center">
-                        	<img src="" />
-                        </p>
+                + An example:    
+                We search for incidents that happened 
+                    + To users with a UUID that contains the characters:
+                    "f28"
+                    + On the 7th of January, 2017
+                    
+                    <p align="center">
+                        <img src="https://lh3.googleusercontent.com/A-053ZZvedUWmwCMGW8_qv2VBEmcsC7JoFW0K871pbOPQGsMQSbPYS3AdX7VL_fros75pT0kmz7TuSecgFLcZ3K6xF_x1sTf7B-wp36f4y3GLj0YklWtFZU7hfYgBDIZX1xzwfC6_wL8GPbgj1TUOfdFKw_EenqWt5y5q1MTNVkP_Tb2yJQjGBL2rKtdBGKE-r0o4Tb30Zdhi27PH_Gi0mfY6BYK280p-5dwwY0bFR-uX2F1OMQIQ3fjliI4DxStGesLz-8p6pk-avtqMzUFxHZmesVDVygWbONzQCNChqlUU77Ufl6rqyNdgCT5LNouZPLZ4BhyVTddAEAnvFGlnByTXXCIzxRvxOMCz523CVS8vAExY2Vg7EfNg604XD0yu_7WzoBYxhe-s8ke5M625AvOLPUINmSED6obsOz8rFfM2DEuflYuPcXbbR8kCW-PfqDLXnP0fQMc6I1yCtLc5r_7u_4YNe9a19rPBew34a9FMh1gZTR8AEloRFzlrtjxMbh9wEWDQ2WUlaLOnalXa3vzZx8LSul3izqzkLFfShMlNgXZfm2Z07ni19-IqRDWQJbR7x3Z5kauYeynrMcCiVlVQn-5_iGnBM-w3mDBWn3xFKPrzrKc=w597-h487-no" />
+                    </p>
+                    + The results are:
+                    
+                    <p align="center">
+                        <img src="https://lh3.googleusercontent.com/ydnmG4LYeLqGYQ4GAfeEQ7J3-GBq6uel51rC7Jm6yzzl2RyaDDHBrkUI4PZAPMpyBNpo8kSBLvqtPoUT6yhnr-ebOFWdZbvY54yUMm7UVHDsp-aqfyJpOe6vRtIVBe8DqVnbZHu2eRDsRWLSPG_jl91yKH-VHJ0RdlfZeD66Zr5RuN32AsLY0yKrxvi7GBL23pB5cv1wBFwPF1qd_NZgMODDhbUnO4hWLm_o2eSYNe7S7-gSyEvQqchPzw3bVpyxbb-ESjGQ5G0hXdVTETiAsGlmbaSz8Bah0VULXl6_O1SJwdrlNOn7bm6PWvpAiLdWJR7MCspWaJPHO-SlCDFiyogJthujoaL0HqbVAup7ZgQKuwScrdg_Dvl5G5xOaBoDPaH_L8j6919UzwyPsbqijM71IjI_lyFlbcyy7i0jqu-OYL_iKRZwbyypARpcqNgf6FoxSvLBj3O9tnfq3po1VUcmMxUiw6FU64CTcfCTANPjY0KXH__oVf6OaGhJ6XW0FVs-a5n8Mz-F1QJC1Ve2983IuWGOhNqRygfPKrb5RMrpbwylTLLd4sYciR2qVLmOTSTIHeR398YSZp3AmWRrpSmW_rTHBggyOlV__hNQYlPEseTevdhv=w737-h574-no" />
+                    </p>
+                    
+                    <p align="center">
+                        <img src="" />
+                    </p>
                         
             + The Settings Tab:
                 <p align="center">
@@ -218,6 +218,6 @@
                 	<img src="https://lh3.googleusercontent.com/Ew-WyQe2zYDScc2vShZW7B1XLAhcrZY3byV5NGosIaLWvVtjlbfKJO184s5TYhcFbbIwgGW57R0LMYX_5J4iPAL2Si16YU6d6V88hzyHFPBDxQ_vkz-eIHNdOqdLWn_d4TWMA8YO82hMNoolWZuKH77j2Ol5YQE9LcrvQ321LLBWldCVGofdvSowUeKQfnUD3f0efjAGMYTP6mF_Au1SPjd_A9kMG3FrgGKqd_p0C7Ss5YM_IDJ0k1ovyenchLfSd1Dz29ZeKaFGHHuGcyklCpZSnsVxMzY_6UpNMgZpQ-83uodLokTc5eyB-cwO16AAHaySc84qApPGByHrJMYbomhugwe0n3G2q-R66GLgR4e658PIhh-gWqHN3ylaLnnhpoAxXxEbq7KwOvr9N4h66I0PhxmfsliKQmj_Dqqpr2dNtClIB0GKtmimRjzyNt-_EYSzCDrU_LsPx5MEBSrvAb8XTsOjDDQils2qFpIavJdJ5aFGAB8a9BzFX3M3c4e3rnVh6KK72cryoakaBuv5OO7Q4FSSy0LeQDlvugJzp5tZJ3i1TA8qH0c85iugfwWLr09kik2BwRdtBS2esekvriig58UEnNBfzzTTjo5EWxmKQt_WFI_q=w600-h486-no" />
                 </p>
                 
-+ This is the end of the desktop application's README file.
+This is the end of the desktop application's README file.
 For information regarding the android client, please 
 see the relative repository [here](https://anapgit.scanlab.gr/1200058-1200066/phase2-Android)
