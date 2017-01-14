@@ -38,16 +38,15 @@
         android clients publish to this + their UUID topic
         + connections/connected/\<Client UUID>:
         Already connected android clients publish
-        to this topic messages of the following format: </br>
-        <a name="message_format">\<"UUID"/"latitude"/"longitude"/"light 
-        sensor value"/"proximity sensor value"> </a>
+        to this topic.
+        
         + connections/connected/\<Client UUID>/
             + warning: The desktop client publishes
             the warning messages to this topic
             + danger: The desktop client publishes
             the danger messages to this topic
             + stopSounds: The desktop client publishes
-            the stop all sounds messages to this topic
+            the stop all sounds messages to this topic  
         + connections/requestAck: Before an android
         client goes into Online Mode, they request
         and acknowledgement message from the desktop 
@@ -56,7 +55,21 @@
         application disconnects ungracefully 
         (it always does), all of the connected clients
         are notified and go into Offline Mode  
-        
+        <p align="center">
+            <img src="https://lh3.googleusercontent.com/2jaFsg99jtHcUNfRbImjZOuFDq19Gwbvpd0BjlrtRcTAMBUJqsYN_9xX5IHouYSz0KADi9jXGsXCv0kirRz4kRJmjzTQ0YYFhTgkSqH_ylb1N5F3lPNLdr5p9ER3281WbT3zUBlFjrEYo3VQdc7UdicSiD3_pFA7_qRQikhHitbuOgFYxpvnW3WIkjqM8RLEzBlfydpqAiMmUX4J-nN_1gsaBo-83Um2Ho2XbDz9vrf7yHpHKLE7t-NV33Jgyjo7icbxtCk9hQquU6rJRCfkJjgNk4N6fDggYh24CU209MnbuD7KjJZiYh5fsQ2rgBK2k0f3kNJwjfyXB0n2bjQSyDLiMsv4iNgeAw3tuVPBLdQ8X3yOpzp3I9Gi_wc0ws9BGNd00_2EhOoTCQzYKfnkugntNMC_uIDxAVBgPY8eE7eLJBB6J2wfIIxqLu05TDbu-N5XAMUPFpjsrYIoomS5pPX7RNvF0-W09xyZu8g-W-DjqAI78adEKSNyBrSxVzCUDVT-I83I0qUvIQfIiTwUQIq5bWnbAEJSIiy2K0rI1KpDWaG0dDVBiGADsX3IXZSpniLCVmANj-gJJlrLdELzQ4XktW-Ewaj7CpbYnu3T8EfNctMuH1Og=w984-h500-no"
+            />
+        </P>
+        + <a name="message_format">Message format by topic:</a>
+            +  log -> No standard format
+            +  connections/newConnections -> \<"Client's UUID"\>
+            +  connections/connected/\<Client's UUID\> -> \<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value">
+            +  connections/connected/\<Client's UUID\>/
+                +  warning -> "warning"
+                +  danger -> "danger"
+                +  stopSounds -> "stop warning"
+                +  acknowledged -> \<The frequency at which the android client should contact the desktop client\>
+            +  connections/requestAck -> \<"Client UUID"\>
+            +  mainClient/disconnected -> "disconnecting"
     + <a name="classes">Classes:</a>
         + The Class Diagram:
         <p align="center">
