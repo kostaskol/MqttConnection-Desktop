@@ -1,8 +1,10 @@
 + Project 2016 Phase 2:
     + <a name="db">Data Base:</a>
-        + The programme uses the MariaDB database which 
+        + The programme uses the MariaDB database and JDBC driver which 
         successfully ran on Linux (ArchLinux).
-        + The database's name is *not* created by the application and must be imported from a self contained .sql file.
+        + The database is *not* created by the application and must be imported from a self contained .sql file.
+        + **_Note:_** To connect to the database, a username and password must be provided in the BundleClasses$Constants.USER - PASS
+        + The database's name we used was "project16". To use a different name, please change the value of BundleClasses$Constants.DB_URL
         + The database contains the following tables:
             + clientAverages - Where the connected clients'
             information is stored
