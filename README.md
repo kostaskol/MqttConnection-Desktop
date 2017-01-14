@@ -2,8 +2,9 @@
     Index:     
     + [**Data Base**](#db)    
     + [**Topics**](#topics)    
-    + [**Classes**](#classes)           
-    ____________________________________________________________________________
+    + [**Classes**](#classes)     
+    + [**Class Methods**](#methods)
+    _____________________________________________________________________________________________________________________________________
     + <a name="db">Data Base:</a>
         + The programme uses the MariaDB database and JDBC driver which 
         successfully ran on Linux (ArchLinux).
@@ -110,7 +111,7 @@
             |SettingsController   |Windows         |Controller    |FXML Controller for the Settings tab
             |Window               |Windows         |Window        |The main application window
             |WindowThread         |Windows         |Thread        |Starts the Main application window inside a thread
-        + A short description for each of the class's methods:
+        + <a name="methods">A short description for each of the class's methods:</a>
             
             |Class Name             |Method              |Description|
             |-----------------------|--------------------|-----------|
