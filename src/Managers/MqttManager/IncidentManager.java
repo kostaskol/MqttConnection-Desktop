@@ -53,39 +53,34 @@ public class IncidentManager extends Thread {
 
 
             if (!checkIncidentTime()) {
-                /*
-                 * We don't send out another warning signal if the client is already ringing
-                 */
-                if (!isRinging) {
-                    client.setIsRinging(true);
-                    DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
-                            "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
-                    dbManagerThread.start();
-                    try {
-                        dbManagerThread.join();
-                    } catch (InterruptedException ie) {
-                        ie.printStackTrace();
-                        return;
-                    }
-                    /*
-                    * If the most recent incident did not happen within the same second
-                    * as this one *and* the client is not already in a state of warning/danger
-                    */
-                    Incident inc = new Incident(this.id, 0, this.lightVal, this.proxVal
-                            , this.latitude, this.longitude, date, time);
-                    dbManagerThread = new DataBaseManagerThread(
-                            "SAVE INCIDENT", Constants.SAVE_INCIDENT, inc);
-                    dbManagerThread.start();
-
-                    try {
-                        dbManagerThread.join();
-                    } catch (InterruptedException ie) {
-                        ie.printStackTrace();
-                    }
-                    MqttManager.publish(
-                            Constants.CONNECTED_TOPIC + id + Constants.TOPIC_WARNING,
-                            Constants.MESSAGE_WARNING);
+                client.setIsRinging(true);
+                DataBaseManagerThread dbManagerThread = new DataBaseManagerThread(
+                        "UPDATE CLIENT", Constants.UPDATE_CLIENT_AVERAGE, client);
+                dbManagerThread.start();
+                try {
+                    dbManagerThread.join();
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                    return;
                 }
+                /*
+                * If the most recent incident did not happen within the same second
+                * as this one *and* the client is not already in a state of warning/danger
+                */
+                Incident inc = new Incident(this.id, 0, this.lightVal, this.proxVal
+                        , this.latitude, this.longitude, date, time);
+                dbManagerThread = new DataBaseManagerThread(
+                        "SAVE INCIDENT", Constants.SAVE_INCIDENT, inc);
+                dbManagerThread.start();
+
+                try {
+                    dbManagerThread.join();
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+                MqttManager.publish(
+                        Constants.CONNECTED_TOPIC + id + Constants.TOPIC_WARNING,
+                        Constants.MESSAGE_WARNING);
             } else {
                 /*
                  * Otherwise, send out the danger signal to the associated clients
