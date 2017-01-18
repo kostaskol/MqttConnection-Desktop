@@ -29,7 +29,7 @@
          <p align="center">
             <img src="https://lh3.googleusercontent.com/RTBO6ryXwmlIhg1kr3BfixPynJuC79nL6hjNR1uR4LidBf9gBFgxOL1oZtDBHf-AsQSq1UsrTIu4TzB0mXuFlSmLPb-gc7lrdg0aIHdDzguRSlgbkXNtr4Dl4AodJB6UAhekBYdMVv2BwMDYR8WwHQZhObpK3N8FNBP2TU5-7AQ-hU3FZBslaWaJ8k7Mkvg3O24fR-UZzMEhO5kWONZbELptQ1dMduMOLFyaLRSK1HIPsSvYqz1zlaF8tP8VaZFo1lonsdiG8HHAxW0PNFYCt8t8VcwB313GCYC79Ht5TFLALYX-50hiaHLuQZaC640CWsKzG-yKrj1L8FInw2vBBPdFi1XY5wgMnWr9LxJ19ZfGJc08sfA2959WsVzCYJz9pos6sjMK3vSddt5dpolruu16KveMpS2JL2mVGnbuXyeZuOyGX7EKesTO7UjYYSZoRuHDWFwalqHzEEE5M8VZQSx2WWRzp09fBf8cuTuOPbehUUTatVwYxu4dy9k4aKXhL0IITnc0vNT6s2Xs0wvCPcpjb9evHULdZI-gx2Mnv06tICMrZ83iyoBdIx7tBfKD2thyMJVC8rJWPaNzfSprVmfP0R85FMRihIqNY5KmMg12NJQJXQOg=w609-h659-no"
             />
-        </P>
+        </p>
     + <h2> <a name="topics">**Mqtt Topics:**</a> </h2>
         
         |Topic                                          |Subtopics                          |Usage                              |
@@ -48,8 +48,8 @@
         <p align="center">
             <img src="https://lh3.googleusercontent.com/EMTDe2A2bCl9MuYJKZhCLX_tX7UdKtdf8fYdxdcuCFidDoLNWDPSGSRl4oVtERlpl-79DWBNPMcfacocgttfsDVU6azZSdBP_WkuWFD2jJ2F8gW6waPMZqLLN0g3wm8OvVqph2EdKa19BJYjsqYHRyAvq9kLpfUcwLtEaH2fTq80pnvMS5q1wzfTGcRKl0gtI-GgZoyINp9rIRpnKFovbLAk6h2PP1O4wwLJT99YfX0txHF1OFchctcVTubwk4zjAbNMjcq3cL0Ad6cVlIBt_71riQmHjeu2gCpdY2uXs68ZlwlUXNOzh9X7C2BwyIrDisLDZmPhtLoNUSl5eCoe_j5sL4CZAVWomGBtwjofZsbiA3fe1D4qyizQ1eRNseiFzk5f9Rcaoa3z4FiseBP9KKZbIyibwM7xOWOv-6B3U-l-9cg8B4FxBR1hLd7QfB9xZuQ80dU0NywqltCgg1tsRDz2-pbNJ1aL095OfSZeZwjX290c1as0ZkAkJZhaa1_eKt1ZajAqfI2CZdJIfhzdQIbiKmLn-NgJ6fQ4Mh6Ve1OXOlOXtiuRcmVbKGWFeoQXeBHu_o1KupHzSX5Xff5GLd_zgDs7cP_fIN0VhO6HFdMsm4GmYExz=w1063-h501-no"
             />
-        </P>
-        + <h3> <a name="message_format">**Message format by topic:**</a> </h3>
+        </p>
+        + <h3> <a name="message_format">**Message format:**</a> </h3>
         
             |Topic                                          |Subtopics                          |Message format                     |
             |:----------------------------------------------|:---------------------------------:|:----------------------------------|
