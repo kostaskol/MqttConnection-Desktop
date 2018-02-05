@@ -8,18 +8,17 @@
     + [**Class Methods**](#methods)
 + [**Screenshots**](#ss)
 + [**Algorithm**](#algorithm)
-<hr>
 
-    + <a name="db">**Data Base:**</a>
-    
-        + The programme uses the MariaDB database and JDBC driver which
+<hr>
++ <a name="db">**Data Base:**</a>
+    + The programme uses the MariaDB database and JDBC driver which
         successfully ran on Linux (ArchLinux).
-        + For the application to run successfully, [this sql dump](https://drive.google.com/open?id=0B103a5xnSqfobzhpQmgyc1JJUVk) must be imported into the MariaDB server running at
+    + For the application to run successfully, [this sql dump](https://drive.google.com/open?id=0B103a5xnSqfobzhpQmgyc1JJUVk) must be imported into the MariaDB server running at
           the location you specify in BundleClasses$Constants.DB_URL.
-        + Note that the database is *not* created by the application.
-        + **_Note:_** To connect to the database, a username and password must be provided in the BundleClasses$Constants.USER - PASS
-        + The database's name we used was "project16". To use a different name, please change the value of BundleClasses$Constants.DB_URL
-        + The database contains the following tables:
+    + Note that the database is *not* created by the application.
+    + **_Note:_** To connect to the database, a username and password must be provided in the BundleClasses$Constants.USER - PASS
+    + The database's name we used was "project16". To use a different name, please change the value of BundleClasses$Constants.DB_URL
+    + The database contains the following tables:
             + clientAverages - Where the connected clients'
             information is stored
             + log - Where all incidents are stored
@@ -28,7 +27,7 @@
             + settingsProfile - Where the currently selected
             profile is stored (name not very accurate.
             Did not have time to change it)  
-
+            
     + <a name="topics">**Mqtt Topics:**</a>
     <table>
     <td>Topic</td>
