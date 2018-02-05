@@ -10,6 +10,7 @@
 + [**Algorithm**](#algorithm)
 
 <hr>
+
 + <a name="db">**Data Base:**</a>
     + The programme uses the MariaDB database and JDBC driver which
         successfully ran on Linux (ArchLinux).
