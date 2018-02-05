@@ -20,14 +20,15 @@
     + **_Note:_** To connect to the database, a username and password must be provided in the BundleClasses$Constants.USER - PASS
     + The database's name we used was "project16". To use a different name, please change the value of BundleClasses$Constants.DB_URL
     + The database contains the following tables:
-            + clientAverages - Where the connected clients'
-            information is stored
-            + log - Where all incidents are stored
-            + settings - Where all of the user's profiles
-            are stored
-            + settingsProfile - Where the currently selected
-            profile is stored (name not very accurate.
-            Did not have time to change it)  
+    
+        + clientAverages - Where the connected clients'
+        information is stored
+        + log - Where all incidents are stored
+        + settings - Where all of the user's profiles
+        are stored
+        + settingsProfile - Where the currently selected
+        profile is stored (name not very accurate.
+        Did not have time to change it)  
             
     + <a name="topics">**Mqtt Topics:**</a>
     <table>
