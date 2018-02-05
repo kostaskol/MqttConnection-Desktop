@@ -9,7 +9,9 @@
 + [**Screenshots**](#ss)
 + [**Algorithm**](#algorithm)
 <hr>
+
     + <a name="db">**Data Base:**</a>
+    
         + The programme uses the MariaDB database and JDBC driver which
         successfully ran on Linux (ArchLinux).
         + For the application to run successfully, [this sql dump](https://drive.google.com/open?id=0B103a5xnSqfobzhpQmgyc1JJUVk) must be imported into the MariaDB server running at
