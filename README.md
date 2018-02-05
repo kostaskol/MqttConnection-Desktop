@@ -79,7 +79,7 @@
     <td>If the desktop application disconnects ungracefully (it always does), all of the connected clients are notified and go into Offline Mode</td>
     </tr></table>
 
-    + <h3> <a name="message_format">**Message format:**</a> </h3>
+    + <h3> <a name="message_format">Message format:</a> </h3>
 
     <table>
     <tr>
@@ -89,16 +89,16 @@
     </tr><tr>
     <td>log</td>
     <td>-None-</td>
-    <td>\<"Log message type" - "message"\></td>
+    <td><"Log message type" - "message"></td>
     </tr><tr>
     <td>connections/newConnections</td>
     <td>-None-</td>
-    <td>\<"Client's UUID"\></td>
+    <td><"Client's UUID"></td>
     </tr><tr>
     <td></td>
-    <td>connections/connected/\<Client's UUID></td>
+    <td>connections/connected/<Client's UUID></td>
     <td>-None-</td>
-    <td>\<"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value"></td>
+    <td><"Client UUID"/"latitude"/"longitude"/"light sensor value"/"proximity sensor value"></td>
     </tr><tr>
     <td></td>
     <td>warning</td>
@@ -114,11 +114,11 @@
     </tr><tr>
     <td></td>
     <td>acknowledged</td>
-    <td>\<The frequency at which the android client should contact the desktop client\></td>
+    <td><The frequency at which the android client should contact the desktop client></td>
     </tr><tr>
     <td>connections/requestAck</td>
     <td>-None-</td>
-    <td>\<"Client's UUID"\></td>
+    <td><"Client's UUID"></td>
     </tr><tr>
     <td>mainClient/disconnected</td>
     <td>-None-</td>
